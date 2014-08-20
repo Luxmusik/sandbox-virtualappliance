@@ -1,5 +1,5 @@
-Sandbox Virtual Appliance Installation Manual
-=============================================
+Sandbox Virtual Appliance 1.0 Install Guide
+===========================================
 This document describes how to install and configure the Sandbox Virtual Appliance (VA) in your environment.
 
 1. System Requirements
