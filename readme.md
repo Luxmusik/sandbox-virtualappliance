@@ -37,11 +37,11 @@ The VA needs to be configured before you can commence using it. Connect to the a
 
 The configuration wizard will guide you through the setup process. You will need to configure:
 
-1. *Organisation name*: This is used for managing user access permissions. All users will be added to your organisation when they are invited to use the Sandbox.
-2. *An administrator user*: This user has full administrative access over the VA. You can create further administrator users after the initial configuration is complete.
-3. *DNS Hostname*: Enter the DNS hostname that you have reserved to point at the EC2 instance running the VA.
-4. *Enabling emails (optional)*: Providing connection details for an SMTP server is recommended so that users can receive notifications when their account is created, added to teams, projects etc and forgotten password functionality is enabled. If you do not have an internal SMTP server you can setup an account on a 3rd party provider, such as Gmail, and use them as your SMTP server.
-5. *Enter License Key (optional)*: If you have purchased a license key from us you can enter it now. If you don't, the VA operates in a free tier mode which still provides full functionality however the number of service mocks you can deploy is limited.
+1. **Organisation name**: This is used for managing user access permissions. All users will be added to your organisation when they are invited to use the Sandbox.
+2. **An administrator user**: This user has full administrative access over the VA. You can create further administrator users after the initial configuration is complete.
+3. **DNS Hostname**: Enter the DNS hostname that you have reserved to point at the EC2 instance running the VA.
+4. **Enabling emails (optional)**: Providing connection details for an SMTP server is recommended so that users can receive notifications when their account is created, added to teams, projects etc and forgotten password functionality is enabled. If you do not have an internal SMTP server you can setup an account on a 3rd party provider, such as Gmail, and use them as your SMTP server.
+5. **Enter License Key (optional)**: If you have purchased a license key from us you can enter it now. If you don't, the VA operates in a free tier mode which still provides full functionality however the number of service mocks you can deploy is limited.
 
 That's it. Save the configuration and the VA will restart itself with the updated configuration. The next time you visit the administration console on port 1080 you will be presented with a login screen. Once logged in, you can change the VA configuration, and restart system services if need be.
 
@@ -49,7 +49,7 @@ That's it. Save the configuration and the VA will restart itself with the update
 ------------------
 Once the VA is configured, you can connect to the Sandbox dashboard on port 80 to add users. A singe administrative user is created for you during the configuration process; you will need to log in with the administrator's email or the username that was generated.
 
-To add new users:
+**To add new users:**
 
 1. Goto 'Organisations' page accessible from your profiles drop-down menu (top right hand navbar)
 2. Select {YourOrganisationName} -> Members from the left hand navbar
@@ -57,11 +57,11 @@ To add new users:
 4. An invite email will be sent to the new user with an activation link. If an SMTP server wasn't configured no email is sent, instead a default password of 'password' is set and the user must log in with their email address initially.
 5. The newly added user will be listed as a member of the organisation
 
-Adding additional administrator users:
+**Adding additional administrator users:**
 
 Follow the steps above to create a user. Move your cursor over the user to reveal the available actions. Select the 'Make this user an admin' action from the options to add the 'Owner' role to the user.
 
-Deleting users:
+**Deleting users:**
 
 Move your cursor over the user to be deleted. If you have the appropriate administrative privileges the 'Delete' action will be available. You will be asked to confirm the delete to prevent accidental deletion.
 
