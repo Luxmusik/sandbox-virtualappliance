@@ -68,7 +68,7 @@ Move your cursor over the user to be deleted. If you have the appropriate admini
 
 5. Configure Sandbox programmatically with the API
 --------------------------------------------------
-Sandbox exposes a REST API that can be used to programmatically create and update MockServices, Sandboxes, users etc. The API is secured and you must provide a valid API session token to authenticate your API calls. The API expects request data encoded as JSON and returns all data as JSON.
+Sandbox exposes a REST API that can be used to programmatically create and update mock services, Sandboxes, users etc. The API is secured and you must provide a valid API session token to authenticate your API calls. The API expects request data encoded as JSON and returns all data as JSON.
 
 #### Acquiring a session token
 You need a session token to perform any authenticated API call such as creating new users, modifying Codebases etc. Get a session token using the /sessions service:
@@ -128,10 +128,10 @@ curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478
 
 The service returns an empty 200 response if successful or an error if it failed.
 
-#### Creating a new MockService
-Creating a new MockService creates a Git repository to host your code and assigns access permissions. Once created, you can pull and push code to the Git repository to update the MockService and deploy the changes.
+#### Creating a new mock service
+Creating a new mock service creates a Git repository to host your code and assigns access permissions. Once created, you can pull and push code to the Git repository to update the mock service and deploy the changes.
 
-Create a MockService using the /mockservices service:
+Create a mock service using the /mockservices service:
 
 ```
 Endpoint: /api/1/mockservices
@@ -140,18 +140,18 @@ Content-Type: application/json
 Cookie: sessionId={your_session_token}, username={your_username}
 Request Body:
 { 
-    "name": give your MockService a name (optional),
+    "name": give your mock service a name (optional),
     "ownerOrganisationName": your organisation name
 }
 ```
 
-If you don't provide a name for the MockService, a name will be generated for you. A curl example to create a new MockService owned by the Bluth organisation:
+If you don't provide a name for the mock service, a name will be generated for you. A curl example to create a new mock service owned by the Bluth organisation:
 
 ```
 curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"name":"banana-stand", "ownerOrganisationName":"Bluth"}' http://sandbox.bluth.com/api/1/mockservices
 ```
 
-The service returns the name of the created MockService or an error if there was a problem processing the request:
+The service returns the name of the created mock service or an error if there was a problem processing the request:
 
 ```
 {
@@ -160,12 +160,12 @@ The service returns the name of the created MockService or an error if there was
 }
 ```
 
-Git repositories are available on the ```git``` subdomain of the configured domain ie. ```git.bluth-sandbox.com.com```.  The Git URL to clone the 'banana-stand' MockService is ```http://michaelbluth@git.sandbox.bluth.com/banana-stand.git```.
+Git repositories are available on the ```git``` subdomain of the configured domain ie. ```git.bluth-sandbox.com.com```.  The Git URL to clone the 'banana-stand' mock service is ```http://michaelbluth@git.sandbox.bluth.com/banana-stand.git```.
 
-Creating a MockService also creates a Sandbox with the same name. For example, to retrieve details for the ```banana-stand``` Sandbox created in the above example call the /api/1/sandboxes/banana-stand endpoint.
+Creating a mock service also creates a Sandbox with the same name. For example, to retrieve details for the ```banana-stand``` Sandbox created in the above example call the /api/1/sandboxes/banana-stand endpoint.
 
 #### Creating a Sandbox
-You can create multiple running Sandboxes for use by different teams. Although Sandboxes can share the same MockService, they run in isolation and do not share persisted data.
+You can create multiple running Sandboxes for use by different teams. Although Sandboxes can share the same mock service, they run in isolation and do not share persisted data.
 
 Create a Sandbox using the /sandboxes service:
 
@@ -177,12 +177,12 @@ Cookie: sessionId={your_session_token}, username={your_username}
 Request Body:
 { 
     "name": give your Sandbox a name (optional),
-    "mockServiceName": the MockService to run inside the Sandbox,
+    "mockServiceName": the mock service to run inside the Sandbox,
     "ownerOrganisationName": your organisation name
 }
 ```
 
-If you don't provide a name for the Sandbox, a name will be generated for you. A curl example to create a new Sandbox running the ```banana-stand``` MockService owned by the Bluth organisation:
+If you don't provide a name for the Sandbox, a name will be generated for you. A curl example to create a new Sandbox running the ```banana-stand``` mock service owned by the Bluth organisation:
 
 ```
 curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"repositoryName":"banana-stand", "ownerOrganisationName":"Bluth"}' http://sandbox.bluth.com/api/1/sandboxes
@@ -199,28 +199,28 @@ The service returns the name of the created Sandbox or an error if there was a p
 ```
 
 
-6. Migrating MockServices between Sandbox VAs
+6. Migrating mock services between Sandbox VAs
 ---------------------------------------------------
-By default, Sandbox Virtual Appliances are self contained and run in isolation. If you are running multiple Sandbox VAs and you wish to migrate MockServices from one to another then you can do this either manually or script the process. The steps are:
+By default, Sandbox Virtual Appliances are self contained and run in isolation. If you are running multiple Sandbox VAs and you wish to migrate mock services from one to another then you can do this either manually or script the process. The steps are:
 
-1. Git clone the source MockService to a filesystem
-2. Create a new target MockService on the target VA
-3. Add a new Git remote pointing to the target MockService
+1. Git clone the source mock service to a filesystem
+2. Create a new target mock service on the target VA
+3. Add a new Git remote pointing to the target mock service
 4. Push changes to the target
 
-A fully worked example: Two environments, Development and Test, each with their own Sandbox VA. Let's call them Development VA and Test VA. The 'banana-stand' MockService is on the Development VA and we wish to programmatically migrate the MockService to the Test VA. The Test VA doesn't yet have a MockService to host the code so we need to create one.
+A fully worked example: Two environments, Development and Test, each with their own Sandbox VA. Let's call them Development VA and Test VA. The 'banana-stand' mock service is on the Development VA and we wish to programmatically migrate the mock service to the Test VA. The Test VA doesn't yet have a mock service to host the code so we need to create one.
 
-#### Git clone the source MockService to a filesystem
+#### Git clone the source mock service to a filesystem
 
-The VA makes Git repositories available over HTTP on the ```git.*``` subdomain, for example if the VA is configured with Domain Name ```dev-sandbox.bluth.com``` then Git is at ```git.dev-sandbox.bluth.com```. To clone our source 'banana-stand' MockService:
+The VA makes Git repositories available over HTTP on the ```git.*``` subdomain, for example if the VA is configured with Domain Name ```dev-sandbox.bluth.com``` then Git is at ```git.dev-sandbox.bluth.com```. To clone our source 'banana-stand' mock service:
 
 ```
 git clone http://michaelbluth@git.dev-sandbox.bluth.com/banana-stand.git
 ```
 
-#### Create a new target MockService
+#### Create a new target mock service
 
-Let's create the target MockService on the Test VA with the same name via the API. We'll create it with a bare Git repository. You will need a valid API session to create the MockService. Using our example from earlier, using Curl:
+Let's create the target mock service on the Test VA with the same name via the API. We'll create it with a bare Git repository. You will need a valid API session to create the mock service. Using our example from earlier, using Curl:
 
 ```
 curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://test-sandbox.bluth.com/api/1/mockservices
@@ -228,9 +228,9 @@ curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478
 
 This will create a new Git repository to host your code. The Git url will be ```git.test-sandbox.bluth.com/banana-stand.git```
 
-#### Add a new Git remote pointing to the target MockService
+#### Add a new Git remote pointing to the target mock service
 
-Having created the new target MockService we need to add it as a git remote to the local copy of the source MockService. From a terminal we do this with **git remote add**:
+Having created the new target mock service we need to add it as a git remote to the local copy of the source mock service. From a terminal we do this with **git remote add**:
 
 ```
 git remote add target http://michaelbluth@git.test-sandbox.bluth.com/banana-stand.git
