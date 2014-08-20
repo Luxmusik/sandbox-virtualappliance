@@ -28,6 +28,7 @@ If you configure a "C" record to map the host name to another (canonical) domain
 You will need to attach the allocated host name to the appliance during the configuration process.
 
 #### SMTP
+Sandbox uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, Sandbox will continue to function however notifications will be disabled.
 
 
 2. Configuring the VA
@@ -58,20 +59,16 @@ To add new users:
 
 Adding additional administrator users:
 
-1. Follow the steps above to create a user
-2. Move your cursor over the user to reveal the available actions. Select the 'Make this user an admin' action from the options to add the 'Owner' role to the user.
+Follow the steps above to create a user. Move your cursor over the user to reveal the available actions. Select the 'Make this user an admin' action from the options to add the 'Owner' role to the user.
 
 Deleting users:
 
-1. Move your cursor over the user to be deleted. If you have the appropriate administrative privileges the 'Delete' action will be available. You will be asked to confirm the delete to prevent accidental deletion.
+Move your cursor over the user to be deleted. If you have the appropriate administrative privileges the 'Delete' action will be available. You will be asked to confirm the delete to prevent accidental deletion.
 
-4. Creating new Codebases
------------------------------
-All users can create new Codebases and new Sandboxes that run your Codebases.
 
 5. Configure Sandbox programmatically with the API
 --------------------------------------------------
-Sandbox exposes a REST API that can be used to programmatically create and update Codebases, Sandboxes, users etc. The API is secured and you must provide a valid API session token to authenticate your API calls. The API expects request data encoded as JSON and returns all data as JSON.
+Sandbox exposes a REST API that can be used to programmatically create and update MockServices, Sandboxes, users etc. The API is secured and you must provide a valid API session token to authenticate your API calls. The API expects request data encoded as JSON and returns all data as JSON.
 
 #### Acquiring a session token
 You need a session token to perform any authenticated API call such as creating new users, modifying Codebases etc. Get a session token using the /sessions service:
@@ -90,7 +87,7 @@ Request Body:
 A curl example to get a session token:
 
 ```
-curl -X POST -H "Content-Type: application/json" -d '{"usernameOrEmail":"michaelbluth", "password":"bananastand"}' http://bluth.com/api/1/sessions
+curl -X POST -H "Content-Type: application/json" -d '{"usernameOrEmail":"michaelbluth", "password":"bananastand"}' http://sandbox.bluth.com/api/1/sessions
 ```
 
 The service returns a sessionId if the user credentials were correct or an error if they are not:
@@ -126,7 +123,7 @@ Request Body:
 A curl example to create a new user for the Bluth organisation (note that organisation names are case sensitive):
 
 ```
-curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"email":"bobloblaw@bluth.com"}' http://bluth.com/api/1/orgs/Bluth/members
+curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"email":"bobloblaw@bluth.com"}' http://sandbox.bluth.com/api/1/orgs/Bluth/members
 ```
 
 The service returns an empty 200 response if successful or an error if it failed.
@@ -148,13 +145,13 @@ Request Body:
 }
 ```
 
-If you don't provide a name for the Codebase, Sandbox will generate one for you. A curl example to create a new Codebase owned by the Bluth organisation:
+If you don't provide a name for the MockService, a name will be generated for you. A curl example to create a new MockService owned by the Bluth organisation:
 
 ```
-curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"name":"banana-stand", "ownerOrganisation":{"name": "Bluth"}}' http://bluth.com/api/1/codebases
+curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"name":"banana-stand", "ownerOrganisationName":"Bluth"}' http://sandbox.bluth.com/api/1/mockservices
 ```
 
-The service returns the name of the created Codebase or an error if there was a problem processing the request:
+The service returns the name of the created MockService or an error if there was a problem processing the request:
 
 ```
 {
@@ -163,12 +160,12 @@ The service returns the name of the created Codebase or an error if there was a 
 }
 ```
 
-Git repositories are available on the ```git``` subdomain of the configured domain ie. ```git.sandbox.bluth```.  The Git URL to clone the 'banana-stand' Codebase is ```http://michaelbluth@git.sandbox.bluth/banana-stand.git```.
+Git repositories are available on the ```git``` subdomain of the configured domain ie. ```git.bluth-sandbox.com.com```.  The Git URL to clone the 'banana-stand' MockService is ```http://michaelbluth@git.sandbox.bluth.com/banana-stand.git```.
 
-Creating a Codebase also creates a Sandbox with the same name. For example, to retrieve details for the ```banana-stand``` Sandbox created in the above example call the /api/1/sandboxes/banana-stand endpoint.
+Creating a MockService also creates a Sandbox with the same name. For example, to retrieve details for the ```banana-stand``` Sandbox created in the above example call the /api/1/sandboxes/banana-stand endpoint.
 
 #### Creating a Sandbox
-You can create multiple running Sandboxes for use by different teams. Although Sandboxes can share the same Codebase, they run in isolation and do not share persisted data.
+You can create multiple running Sandboxes for use by different teams. Although Sandboxes can share the same MockService, they run in isolation and do not share persisted data.
 
 Create a Sandbox using the /sandboxes service:
 
@@ -180,15 +177,15 @@ Cookie: sessionId={your_session_token}, username={your_username}
 Request Body:
 { 
     "name": give your Sandbox a name (optional),
-    "mockServiceName": the Codebase to run inside the Sandbox,
+    "mockServiceName": the MockService to run inside the Sandbox,
     "ownerOrganisationName": your organisation name
 }
 ```
 
-If you don't provide a name for the Sandbox, a name will be generated for you. A curl example to create a new Sandbox running the ```banana-stand``` Codebase owned by the Bluth organisation:
+If you don't provide a name for the Sandbox, a name will be generated for you. A curl example to create a new Sandbox running the ```banana-stand``` MockService owned by the Bluth organisation:
 
 ```
-curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"repositoryName":"banana-stand", "ownerOrganisationName":"Bluth"}' http://bluth.com/api/1/sandboxes
+curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"repositoryName":"banana-stand", "ownerOrganisationName":"Bluth"}' http://sandbox.bluth.com/api/1/sandboxes
 ```
 
 The service returns the name of the created Sandbox or an error if there was a problem processing the request:
@@ -202,50 +199,44 @@ The service returns the name of the created Sandbox or an error if there was a p
 ```
 
 
-6. Migrating Codebases between Sandbox VAs
+6. Migrating MockServices between Sandbox VAs
 ---------------------------------------------------
-By default, Sandbox Virtual Appliances are self contained and run in isolation. If you are running multiple Sandbox VAs and you wish to migrate Codebases from one to another then you can do this either manually or script the process. The steps are:
+By default, Sandbox Virtual Appliances are self contained and run in isolation. If you are running multiple Sandbox VAs and you wish to migrate MockServices from one to another then you can do this either manually or script the process. The steps are:
 
-1. Git clone the source Codebase to a filesystem
-2. Create a new target Codebase on the target VA
-3. Add a new Git remote pointing to the target Codebase
-4. Merge the repositories and push changes to the target
+1. Git clone the source MockService to a filesystem
+2. Create a new target MockService on the target VA
+3. Add a new Git remote pointing to the target MockService
+4. Push changes to the target
 
-A fully worked example: Two environments, Development and Test, each with their own Sandbox VA. Let's call them Development VA and Test VA. The 'banana-stand' Codebase is on the Development VA and we wish to programmatically migrate the Codebase to the Test VA. The Test VA doesn't yet have a Codebase to host the code so we need to create one.
+A fully worked example: Two environments, Development and Test, each with their own Sandbox VA. Let's call them Development VA and Test VA. The 'banana-stand' MockService is on the Development VA and we wish to programmatically migrate the MockService to the Test VA. The Test VA doesn't yet have a MockService to host the code so we need to create one.
 
-#### Git clone the source Codebase to a filesystem
+#### Git clone the source MockService to a filesystem
 
-The VA makes Git repositories available over HTTP on the ```git.*``` subdomain, for example if the VA is configured with Domain Name ```dev.bluth.com``` then Git is at ```git.dev.bluth.com```. To clone our source 'banana-stand' Codebase:
-
-```
-git clone http://michaelbluth@git.dev.bluth.com/banana-stand.git
-```
-
-#### Create a new target Codebase
-
-Let's create the target Codebase on the Test VA with the same name via the API. You will need a valid API session to create the Codebase. Using our example from earlier, using Curl:
+The VA makes Git repositories available over HTTP on the ```git.*``` subdomain, for example if the VA is configured with Domain Name ```dev-sandbox.bluth.com``` then Git is at ```git.dev-sandbox.bluth.com```. To clone our source 'banana-stand' MockService:
 
 ```
-curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"name":"banana-stand", "ownerOrganisation":{"name": "Bluth"}}' http://test.bluth.com/api/1/codebases
+git clone http://michaelbluth@git.dev-sandbox.bluth.com/banana-stand.git
 ```
 
-This will create a new Git repository to host your code. The Git url will be ```git.test.bluth.com/banana-stand.git```
+#### Create a new target MockService
 
-#### Add a new Git remote pointing to the target Codebase
-
-Having created the new target Codebase we need to add it as a git remote to the local copy of the source Codebase. From a terminal we do this with **git remote add**:
+Let's create the target MockService on the Test VA with the same name via the API. We'll create it with a bare Git repository. You will need a valid API session to create the MockService. Using our example from earlier, using Curl:
 
 ```
-git remote add target http://michaelbluth@git.test.bluth.com/banana-stand.git
+curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://test-sandbox.bluth.com/api/1/mockservices
 ```
 
-#### Merge the repositories and push changes to the target
+This will create a new Git repository to host your code. The Git url will be ```git.test-sandbox.bluth.com/banana-stand.git```
 
-We simply want to pull in the target Git repository and over-write the default template it contains with the source repository Codebase:
+#### Add a new Git remote pointing to the target MockService
+
+Having created the new target MockService we need to add it as a git remote to the local copy of the source MockService. From a terminal we do this with **git remote add**:
 
 ```
-git pull --no-edit -Xours target master
+git remote add target http://michaelbluth@git.test-sandbox.bluth.com/banana-stand.git
 ```
+
+#### Push changes to the target
 
 Finally, push the changes to the target repository:
 
@@ -258,16 +249,15 @@ And we're done. A sample script incorporating the steps:
 ```
 #!/bin/bash
 # clone the source Codebase
-git clone http://michaelbluth@git.dev.bluth.com/banana-stand.git
+git clone http://michaelbluth@git.dev-sandbox.bluth.com/banana-stand.git
 
 # create target Codebase
-curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"name":"banana-stand", "ownerOrganisation":{"name": "Bluth"}}' http://test.bluth.com/api/1/codebases
+curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734; username=michaelbluth" -d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://test-sandbox.bluth.com/api/1/mockservices
 
 # add new git remote
-git remote add target http://michaelbluth@git.test.bluth.com/banana-stand.git
+git remote add target http://michaelbluth@git.test-sandbox.bluth.com/banana-stand.git
 
-# merge and push changes
-git pull --no-edit -Xours target master
+# push changes to the target
 git push target master
 ```
 
