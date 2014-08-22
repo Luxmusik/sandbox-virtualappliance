@@ -365,7 +365,8 @@ And we're done. A sample script incorporating the steps:
 git clone http://michaelbluth@git.bluth-dev-sandbox.com/banana-stand.git
 
 # create target Codebase
-curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734" -d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://bluth-test-sandbox.com/api/1/mockservices
+curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734" 
+-d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://bluth-test-sandbox.com/api/1/mockservices
 
 # add new git remote
 git remote add target-appliance http://michaelbluth@git.bluth-test-sandbox.com/banana-stand.git
