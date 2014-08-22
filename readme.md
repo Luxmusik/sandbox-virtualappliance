@@ -17,6 +17,7 @@ Note that as this time the AMI is only available in the above regions; if you wi
 We recommend selecting an m3.medium or larger instance. Generally speaking, the appliance benefits from a greater memory allocation than cpu.
 
 You must attach a security group to the instance with the following inbound rules:
+
 | Type      | Protocol  | Port Range    |
 |-----------|-----------|---------------|
 | SSH       | TCP       | 22            |
@@ -368,7 +369,7 @@ git remote add target http://michaelbluth@git.test-sandbox.bluth.com/banana-stan
 git push target master
 ```
 
-#### Troubleshooting:
+**Troubleshooting:**
 
-*All mock service names and Sandbox names are globally unique. If you try to create a new mock service or Sandbox with a name that is already registered you will get an error.
+* All mock service names and Sandbox names are globally unique. If you try to create a new mock service or Sandbox with a name that is already registered you will get an error.
 
