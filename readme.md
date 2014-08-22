@@ -378,6 +378,4 @@ git push target-appliance master
 
 **Troubleshooting:**
 
-* All mock service names and Sandbox names are globally unique. If you try to create a new mock service or Sandbox with a name that is already registered you will get an error.
-
 *All mock service names and Sandbox names are globally unique for each appliance. If you try to create a new mock service or Sandbox with a name that is already registered you will get an error.
