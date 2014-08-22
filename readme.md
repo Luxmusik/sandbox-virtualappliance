@@ -251,8 +251,9 @@ Content-Type: application/json
 Cookie: sessionId={your_session_token}
 Request Body:
 { 
-    "name": give your mock service a name (optional),
-    "ownerOrganisationName": your organisation name
+    "ownerOrganisationName": your organisation name,
+    "name": (Optional) give your mock service a name,
+    "commitBaseTemplate": (Optional) expects a boolean (true|false). If false, creates a bare repo. If true, commits an exmple mock service
 }
 ```
 
