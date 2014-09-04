@@ -10,7 +10,7 @@ The appliance is made available as an AWS AMI to allow for quick and easy deploy
 
 The private AMI for Sandbox is available in the following regions:
 
-* ap-southeast-2 (Asia/Sydney): ami-2bf89e11
+* ap-southeast-2 (Asia/Sydney): ami-151a7a2f
 
 Note that as this time the AMI is only available in the above regions; if you wish to run your EC2 instance in another zone, please contact us for assistance.
 
