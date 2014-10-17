@@ -171,7 +171,7 @@ scp scp://sandboxadmin:sandbox@<your-appliance-ip>:22/~/ ./1413495704-appliance.
 
 1. If you have uploaded an invalid service pack you will receive an error alert on the adminstrative console and the upgrade process will be aborted. The appliance will remain in its previous state.
 
-2. If on restart, the appliance is in an inconsistent state, restore from your backup snapshot and contact [support](support@getsandbox.com) for assistance.
+2. If on restart, the appliance is in an inconsistent state, restore from your backup snapshot and contact [support](mailto:support@getsandbox.com) for assistance.
 
 4. User Management
 ------------------
