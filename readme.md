@@ -356,9 +356,9 @@ The appliance makes Git repositories available over HTTP on the ```git.*``` subd
 git clone http://michaelbluth@git.bluth-dev-sandbox.com/banana-stand.git
 ```
 
-#### Create a new sandbox service
+#### Create the new target sandbox
 
-Let's create the target sandbox on the Test appliance with the same name via the API. We'll create it with a bare Git repository. You will need a valid API session to create the sandbox. Using our example from earlier, using Curl:
+Create the target sandbox on the Test appliance with the same name via the API. We'll create it with a bare Git repository. You will need a valid API session to create the sandbox. Using our example from earlier, using Curl:
 
 ```
 curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734" 
