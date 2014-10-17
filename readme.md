@@ -155,9 +155,10 @@ The appliance can be upgraded with service packs. Service packs are made availab
 
 Latest service pack: [Service Pack v1.0.1](https://s3-us-west-2.amazonaws.com/getsandbox-assets/1413495704-appliance.sbx)
 
-** Applying service packs:**
+**Applying service packs:**
 
 To apply a service pack:
+
 1. Take a snapshot of your appliance as a backup.
 2. Download the service pack to your local filesyastem
 3. Copy the service pack to the appliance via scp. It must be copied to the sandboxadmin users home directory. For example:
@@ -170,6 +171,7 @@ scp scp://sandboxadmin:sandbox@<your-appliance-ip>:22/~/ ./1413495704-appliance.
 5. Clicking 'Install now' will apply the service pack and restart the appliance. Restart can take up to 2 minutes.
 
 **Troubleshooting**
+
 1. If you have uploaded an invalid service pack you will receive an error alert on the adminstrative console and the upgrade process will be aborted. The appliance will remain in its previous state.
 
 2. If on restart, the appliance is in an inconsistent state, restore from your backup snapshot and contact [support](support@getsandbox.com) for assistance.
@@ -178,7 +180,7 @@ scp scp://sandboxadmin:sandbox@<your-appliance-ip>:22/~/ ./1413495704-appliance.
 ------------------
 Once the appliance is configured, you can connect to the Sandbox application. A single administrator user is created for you during the configuration process; you will need to log in with the administrator's email or the username that was generated.
 
-** Add new users:**
+**Add new users:**
 
 1. From the Dashboard, click your username in the top right-hand navbar to reveal a drop-down menu and click 'Organisations'
 2. Select {YourOrganisationName} -> Members from the left hand navbar
