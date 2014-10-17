@@ -6,13 +6,13 @@ This document describes how to install and configure the Sandbox Virtual Applian
 ----------------------
 
 #### Amazon AWS
-The appliance is made available as an AWS AMI to allow for quick and easy deployments of Sandbox on an Amazon EC2 instance. This means rather than having a blank Linux image, Sandbox will already be installed and running once Amazon creates your EC2 instance. 
+The appliance is made available as an AWS AMI to allow for quick and easy deployments on an Amazon EC2 instance. This means rather than having a blank Linux image, the Sandbox application will already be installed and running once Amazon creates your EC2 instance. 
 
 The private AMI for Sandbox is available in the following regions:
 
 * ap-southeast-2 (Asia/Sydney): ami-151a7a2f
 
-Note that as this time the AMI is only available in the above regions; if you wish to run your EC2 instance in another zone, please contact us for assistance.
+Note that as of this time the AMI is only available in the above regions; if you wish to run your EC2 instance in another zone, please contact us for assistance.
 
 We recommend selecting an m3.medium or larger instance. Generally speaking, the appliance benefits from a greater memory allocation than cpu.
 
@@ -26,17 +26,19 @@ You must attach a security group to the instance with the following inbound rule
 
 The appliance administration console is accessible on port 1080. The Sandbox application is accessible on port 80. SSH is required to apply update packages to the appliance.
 
+Both port 22 and 1080 are used for adminstrative purposes only. For security reasons, these should not be publicly accessible. Restrict access using a firewall, or binding the ports to white-listed internal ips when creating the security group.
+
 #### DNS Provider
-The Sandbox appliance requires a host name provided by a a DNS service. This is necesary to properly route traffic to mock services and system components on the appliance.
+The appliance requires a host name provided by a a DNS service. This is necesary to properly route traffic to sandboxes and system components on the appliance.
 
 If you configure an "A" record to map the host name to an IP address you must specify a *wildcard domain* such as ```*.sandbox-va.com``` so that requests for subdomains such as ```git.sandbox-va.com```, ```bar.sandbox-va.com``` are routed to the host name.
 
 If you configure a "C" record to map the host name to another (canonical) domain name again you must specify a *wildcard domain* such as ```*.sandbox-va.com```
 
-You will need to attach the allocated host name to the appliance during the configuration process.
+You will need to provide the allocated host name to the appliance during the configuration process.
 
 #### SMTP
-The Sandbox appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled.
+The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled.
 
 
 2. Configuring the Appliance
@@ -57,7 +59,7 @@ The configuration wizard will guide you through the setup process. You will need
 
 That's it. Save the configuration and the appliance will restart itself with the updated configuration and you will be redirected to the Sandbox web application. You are now ready to start adding users and creating mock services.
 
-#### Appliance configuration via API
+#### Appliance configuration using API
 
 The appliance exposes an administrative RESTful API on port 1080 that can be used to programmatically configure the appliance. When the appliance is in its initial unconfigured state the API is unsecured (as the administrator user does not yet exist). Configure the appliance using the /config service:
 
@@ -84,16 +86,16 @@ Request Body:
 
 The /config service returns an empty response with status 200 if the configuration was successful or an error if it was not. The appliance will immediately restart itself on receipt of a valid configuration, please allow upto 120 seconds for all components to restart after the /config service has responded.
 
-5. Updating the appliance configuration
+3. Updating the Appliance Configuration
 ---------------------------------------
 
 The appliance configuration can be updated using the administration console or programmatically via the API.
 
 #### Update appliance configuration using administration console
 
-The appliance configuration can be updated by logging into the appliance administration console on port 1080. All settings except the default administrator user and the Organisation can be updated. Saving the configuration will once again restart the appliance with the updated configuration and you will be redirected to the Sandbox application page.
+The appliance configuration can be updated by logging into the appliance administration console on port 1080. All settings except the default administrator user and the organisation can be updated. Saving the configuration will once again restart the appliance with the updated configuration and you will be redirected to the Sandbox application page.
 
-#### Update appliance configuration via API
+#### Update appliance configuration using API
 
 Once configured, the administrative RESTful API on port 1080 is secured and you must acquire a session token to perform administrative actions. The session token must be provided as a Cookie header on subsequent requests to the API.
 
@@ -147,11 +149,36 @@ Request Body:
 
 The /config service returns an empty response with status 200 if the configuration was successful or an error if it was not. The appliance will immediately restart itself on receipt of a valid configuration, please allow upto 120 seconds for all components to restart after the /config service has responded.
 
-3. User management
+4. Upgrading the Appliance
+-------------------------
+The appliance can be upgraded with service packs. Service packs are made available periodically to address security fixes and provide feature updates.
+
+Latest service pack: [Service Pack v1.0.1](https://s3-us-west-2.amazonaws.com/getsandbox-assets/1413495704-appliance.sbx)
+
+** Applying service packs:**
+
+To apply a service pack:
+1. Take a snapshot of your appliance as a backup.
+2. Download the service pack to your local filesyastem
+3. Copy the service pack to the appliance via scp. It must be copied to the sandboxadmin users home directory. For example:
+
+```
+scp scp://sandboxadmin:sandbox@<your-appliance-ip>:22/~/ ./1413495704-appliance.sbx
+```
+
+4. Log into the Adminstration console on port 1080 and scroll down. If the service pack was successfully copied a 'Local update found' message will be displayed.
+5. Clicking 'Install now' will apply the service pack and restart the appliance. Restart can take up to 2 minutes.
+
+**Troubleshooting**
+1. If you have uploaded an invalid service pack you will receive an error alert on the adminstrative console and the upgrade process will be aborted. The appliance will remain in its previous state.
+
+2. If on restart, the appliance is in an inconsistent state, restore from your backup snapshot and contact [support](support@getsandbox.com) for assistance.
+
+4. User Management
 ------------------
 Once the appliance is configured, you can connect to the Sandbox application. A single administrator user is created for you during the configuration process; you will need to log in with the administrator's email or the username that was generated.
 
-**To add new users:**
+** Add new users:**
 
 1. From the Dashboard, click your username in the top right-hand navbar to reveal a drop-down menu and click 'Organisations'
 2. Select {YourOrganisationName} -> Members from the left hand navbar
@@ -170,17 +197,17 @@ Move your cursor over the user to be deleted. If you have the appropriate admini
 **Password reset:**
 To do password reset you must have an email service provider configured. A user can request to reset their password from the Sign-in page. An email with a reset password link will be sent to their email address.
 
-4. Getting started with Mock services and Sandbox
+4. Getting started with Sandbox
 -------------------------------------------------
 
-Once you have users on your system they are able to start building and running mock services on the appliance. Please refer to the Sandbox application documentation available at http://*your_sandbox_hostname*/docs for guides, examples, and API references.
+Once you have added users to the Sandbox application they are able to start building and running sandboxes on the appliance. Please refer to the Sandbox application documentation available at http://*your_sandbox_hostname*/docs for guides, examples, and API references.
 
-5. Configure Sandbox programmatically with the API
+5. Sandbox API
 --------------------------------------------------
-Sandbox exposes a RESTful API that can be used to programmatically perform user management, create and update mock services, and so on. The API is secured and you must provide a valid API session token to authenticate your API calls. The API expects request data encoded as JSON and returns all data as JSON.
+Sandbox exposes a RESTful API that can be used to programmatically perform user management, create and update sandboxes, and so on. The API is secured and you must provide a valid API session token to authenticate your API calls. The API expects request data encoded as JSON and returns all data as JSON.
 
 #### Acquiring a session token
-You need a session token to perform any authenticated API call such as creating new users, modifying Codebases etc. Get a session token using the /sessions service:
+You need a session token to perform any authenticated API call such as creating new users, modifying sandboxes etc. Get a session token using the /sessions service:
 
 ```
 Endpoint: /api/1/sessions
@@ -215,7 +242,7 @@ The service returns a sessionId if the user credentials were correct or an error
 ```
 
 #### Creating a user
-To create a new user you 'invite' a user to the organisation registered during the inital VA configuration step. If you have configured an email service provider, it will send that user an activation email with a link to complete their user setup. If you do not have an email service provider configured, an email will not be sent and a default password of 'password' will be assigned to the user. The new user will be forced to change it on first login.
+To create a new user you 'invite' a user to the organisation registered during the inital appliance configuration step. If you have configured an email service provider, it will send that user an activation email with a link to complete their user setup. If you do not have an email service provider configured, an email will not be sent and a default password of 'password' will be assigned to the user. The new user will be forced to change it on first login.
 
 Create a user using the /orgs/{org}/members service:
 
@@ -239,32 +266,32 @@ curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478
 
 The service returns an empty 200 response if successful or an error if it failed.
 
-#### Creating a new mock service
-Creating a new mock service creates a Git repository to host your code and assigns access permissions. Once created, you can pull and push code to the Git repository to update the mock service and deploy the changes.
+#### Creating a sandbox
+Creating a new sandbox creates a Git repository to host your code and assigns access permissions. Once created, you can pull and push code to the Git repository to update the sandbox and deploy the changes.
 
-Create a mock service using the /mockservices service:
+Create a sandbox using the /sandbox service:
 
 ```
-Endpoint: /api/1/mockservices
+Endpoint: /api/1/sandboxes
 Method: POST
 Content-Type: application/json
 Cookie: sessionId={your_session_token}
 Request Body:
 { 
     "ownerOrganisationName": your organisation name,
-    "name": (Optional) give your mock service a name,
-    "commitBaseTemplate": (Optional) expects a boolean (true|false). If false, creates a bare repo. If true, commits an exmple mock service
+    "name": (Optional) give your sandbox a name,
+    "commitBaseTemplate": (Optional) expects a boolean (true|false). If false, creates a bare repo. If true, commits example code. Defaults to true.
 }
 ```
 
-If you don't provide a name for the mock service, a name will be generated for you. A curl example to create a new mock service owned by the Bluth organisation:
+If you don't provide a name for the sandbox, a name will be generated for you. A curl example to create a new sandbox owned by the Bluth organisation:
 
 ```
 curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734" 
--d '{"name":"banana-stand", "ownerOrganisationName":"Bluth"}' http://bluth-sandbox.com/api/1/mockservices
+-d '{"name":"banana-stand", "ownerOrganisationName":"Bluth"}' http://bluth-sandbox.com/api/1/sandboxes
 ```
 
-The service returns the name of the created mock service or an error if there was a problem processing the request:
+The service returns the name of the created sandbox or an error if there was a problem processing the request:
 
 ```
 {
@@ -273,14 +300,12 @@ The service returns the name of the created mock service or an error if there wa
 }
 ```
 
-Git repositories are available on the ```git``` subdomain of the configured domain ie. ```git.bluth-sandbox.com```.  The Git URL to clone the 'banana-stand' mock service is ```http://michaelbluth@git.bluth-sandbox.com/banana-stand.git```.
+Git repositories are available on the ```git``` subdomain of the configured domain ie. ```git.bluth-sandbox.com```.  For example, the Git URL to clone the 'banana-stand' sandbox is ```http://michaelbluth@git.bluth-sandbox.com/banana-stand.git```.
 
-Creating a mock service also creates a Sandbox with the same name. For example, to retrieve details for the ```banana-stand``` Sandbox created in the above example call the /api/1/sandboxes/banana-stand endpoint.
+#### Cloning a Sandbox
+Cloning sandboxes is a great way to share web service mocks across teams. A cloned sandbox does not have its own codebase, they share the same codebase as their parent, and therefore they have no Git repository. Changes made to the parent are reflected in all clones. They run in isolation and do not share persisted data.
 
-#### Creating a Sandbox
-You can create multiple running Sandboxes for use by different teams. Although Sandboxes can share the same mock service, they run in isolation and do not share persisted data.
-
-Create a Sandbox using the /sandboxes service:
+Clone a Sandbox using the /sandboxes service:
 
 ```
 Endpoint: /api/1/orgs/sandboxes
@@ -289,20 +314,20 @@ Content-Type: application/json
 Cookie: sessionId={your_session_token}
 Request Body:
 { 
-    "name": give your Sandbox a name (optional),
-    "mockServiceName": the mock service to run inside the Sandbox,
-    "ownerOrganisationName": your organisation name
+    "name": give your sandbox a name (optional),
+    "ownerOrganisationName": your organisation name,
+    "parentSandboxName": name of the sandbox to clone
 }
 ```
 
-If you don't provide a name for the Sandbox, a name will be generated for you. A curl example to create a new Sandbox running the ```banana-stand``` mock service owned by the Bluth organisation:
+If you don't provide a name for the cloned sandbox, a name will be generated for you. A curl example to create a clone of the ```banana-stand``` sandbox owned by the Bluth organisation:
 
 ```
 curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734" 
--d '{"repositoryName":"banana-stand", "ownerOrganisationName":"Bluth"}' http://bluth-sandbox.com/api/1/sandboxes
+-d '{"parentSandboxName":"banana-stand", "ownerOrganisationName":"Bluth"}' http://bluth-sandbox.com/api/1/sandboxes
 ```
 
-The service returns the name of the created Sandbox or an error if there was a problem processing the request:
+The service returns the name of the cloned sandbox or an error if there was a problem processing the request:
 
 ```
 {
@@ -313,39 +338,39 @@ The service returns the name of the created Sandbox or an error if there was a p
 ```
 
 
-6. Migrating mock services between Sandbox Appliances
+6. Migrating Sandboxes Between Appliances
 -----------------------------------------------------
-By default, Sandbox Virtual Appliances are self contained and run in isolation. If you are running multiple appliances and you wish to migrate mock services from one to another then you can do this either manually or script the process. The steps are:
+By default, Sandbox Appliances are self contained and run in isolation. If you are running multiple appliances and you wish to migrate sandboxes from one to another then you can do this either manually or script the process. The steps are:
 
-1. Git clone the source mock service to a filesystem
-2. Create a new target mock service on the target appliance
-3. Add a new Git remote pointing to the target mock service
+1. Git clone the source sandbox to a filesystem
+2. Create a new target sandbox on the target appliance
+3. Add a new Git remote pointing to the target sandbox
 4. Push changes to the target
 
-A fully worked example: Two environments, Development and Test, each with their own appliance. Let's call them Development appliance and Test appliance. The 'banana-stand' mock service is on the Development appliance and we wish to programmatically migrate the mock service to the Test appliance. The Test appliacne doesn't yet have a mock service to host the code so we need to create one.
+A fully worked example: Two environments, Development and Test, each with their own appliance. Let's call them Development appliance and Test appliance. The 'banana-stand' sandbox is on the Development appliance and we wish to programmatically migrate the sandbox to the Test appliance. The Test appliacne doesn't yet have a sandbox to host the code so we need to create one.
 
-#### Git clone the source mock service to a filesystem
+#### Git clone the source sandbox to a filesystem
 
-The VA makes Git repositories available over HTTP on the ```git.*``` subdomain, for example if the appliance is configured with Domain Name ```bluth-dev-sandbox.com``` then Git is at ```git.bluth-dev-sandbox.com```. To clone our source 'banana-stand' mock service:
+The appliance makes Git repositories available over HTTP on the ```git.*``` subdomain, for example if the appliance is configured with Domain Name ```bluth-dev-sandbox.com``` then Git is at ```git.bluth-dev-sandbox.com```. To clone our source 'banana-stand' sandbox:
 
 ```
 git clone http://michaelbluth@git.bluth-dev-sandbox.com/banana-stand.git
 ```
 
-#### Create a new target mock service
+#### Create a new sandbox service
 
-Let's create the target mock service on the Test VA with the same name via the API. We'll create it with a bare Git repository. You will need a valid API session to create the mock service. Using our example from earlier, using Curl:
+Let's create the target sandbox on the Test appliance with the same name via the API. We'll create it with a bare Git repository. You will need a valid API session to create the sandbox. Using our example from earlier, using Curl:
 
 ```
 curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734" 
--d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://bluth-test-sandbox.com/api/1/mockservices
+-d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://bluth-test-sandbox.com/api/1/sandboxes
 ```
 
 This will create a new Git repository to host your code. The Git url will be ```git.bluth-test-sandbox.com/banana-stand.git```
 
-#### Add a new Git remote pointing to the target mock service
+#### Add a new Git remote pointing to the target sandbox
 
-Having created the new target mock service we need to add it as a git remote to the local copy of the source mock service. From a terminal we do this with **git remote add**:
+Having created the new target sandbox we need to add it as a git remote to the local copy of the source sandbox. For example, you can do this from a terminal with **git remote add**:
 
 ```
 git remote add target-appliance http://michaelbluth@git.bluth-test-sandbox.com/banana-stand.git
@@ -359,16 +384,16 @@ Finally, push the changes to the target repository:
 git push target-appliance master
 ```
 
-And we're done. A sample script incorporating the steps:
+And we're done. Pushing to Git will update the running sandbox with the new codebase. A sample script incorporating the steps:
 
 ```
 #!/bin/bash
-# clone the source Codebase
+# clone the source sandbox code
 git clone http://michaelbluth@git.bluth-dev-sandbox.com/banana-stand.git
 
-# create target Codebase
+# create target sandbox
 curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734" 
--d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://bluth-test-sandbox.com/api/1/mockservices
+-d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://bluth-test-sandbox.com/api/1/sandbox
 
 # add new git remote
 git remote add target-appliance http://michaelbluth@git.bluth-test-sandbox.com/banana-stand.git
@@ -379,4 +404,4 @@ git push target-appliance master
 
 **Troubleshooting:**
 
-*All mock service names and Sandbox names are globally unique for each appliance. If you try to create a new mock service or Sandbox with a name that is already registered you will get an error.
+*All sandbox names are globally unique for each appliance. If you try to create a sandbox with a name that is already registered you will get an error.
