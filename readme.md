@@ -161,10 +161,8 @@ To apply a service pack:
 
 1. Take a snapshot of your appliance as a backup.
 2. Download the service pack to your local filesyastem
-3. Copy the service pack to the appliance via scp. It must be copied to the sandboxadmin users home directory. For example:
-```
-scp scp://sandboxadmin:sandbox@<your-appliance-ip>:22/~/ ./1413495704-appliance.sbx
-```
+3. Copy the service pack to the appliance via scp. It must be copied to the sandboxadmin users home directory. For example:```
+scp scp://sandboxadmin:sandbox@<your-appliance-ip>:22/~/ ./1413495704-appliance.sbx```
 
 4. Log into the Adminstration console on port 1080 and scroll down. If the service pack was successfully copied a 'Local update found' message will be displayed.
 5. Clicking 'Install now' will apply the service pack and restart the appliance. Restart can take up to 2 minutes.
