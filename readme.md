@@ -40,8 +40,32 @@ You will need to provide the allocated host name to the appliance during the con
 #### SMTP
 The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled.
 
+2. Upgrading the Appliance
+-------------------------
+The appliance can be upgraded with service packs. Service packs are made available periodically to address security fixes and provide feature updates.
 
-2. Configuring the Appliance
+Latest service pack: [Service Pack v1.0.1](https://s3-us-west-2.amazonaws.com/getsandbox-assets/1414552548-appliance.sbx)
+
+**Applying service packs:**
+
+To apply a service pack:
+
+1. Take a snapshot of your appliance as a backup.
+2. Download the service pack to your local filesyastem
+3. Copy the service pack to the appliance via scp. It must be copied to the sandboxadmin users home directory. For example:```
+scp scp://sandboxadmin:sandbox@<your-appliance-ip>:22/~/ ./1413495704-appliance.sbx```
+
+4. Log into the Adminstration console on port 1080 and scroll down. If the service pack was successfully copied a 'Local update found' message will be displayed.
+5. Clicking 'Install now' will apply the service pack and restart the appliance. Restart can take up to 2 minutes.
+
+**Troubleshooting**
+
+1. If you have uploaded an invalid service pack you will receive an error alert on the adminstrative console and the upgrade process will be aborted. The appliance will remain in its previous state.
+
+2. If on restart, the appliance is in an inconsistent state, restore from your backup snapshot and contact [support](mailto:support@getsandbox.com) for assistance.
+
+
+3. Configuring the Appliance
 ----------------------------
 The appliance needs to be configured before you can commence using it. You can configure the appliance using the administration console or programmatically via the API.
 
@@ -86,7 +110,7 @@ Request Body:
 
 The /config service returns an empty response with status 200 if the configuration was successful or an error if it was not. The appliance will immediately restart itself on receipt of a valid configuration, please allow upto 120 seconds for all components to restart after the /config service has responded.
 
-3. Updating the Appliance Configuration
+4. Updating the Appliance Configuration
 ---------------------------------------
 
 The appliance configuration can be updated using the administration console or programmatically via the API.
@@ -149,31 +173,7 @@ Request Body:
 
 The /config service returns an empty response with status 200 if the configuration was successful or an error if it was not. The appliance will immediately restart itself on receipt of a valid configuration, please allow upto 120 seconds for all components to restart after the /config service has responded.
 
-4. Upgrading the Appliance
--------------------------
-The appliance can be upgraded with service packs. Service packs are made available periodically to address security fixes and provide feature updates.
-
-Latest service pack: [Service Pack v1.0.1](https://s3-us-west-2.amazonaws.com/getsandbox-assets/1413495704-appliance.sbx)
-
-**Applying service packs:**
-
-To apply a service pack:
-
-1. Take a snapshot of your appliance as a backup.
-2. Download the service pack to your local filesyastem
-3. Copy the service pack to the appliance via scp. It must be copied to the sandboxadmin users home directory. For example:```
-scp scp://sandboxadmin:sandbox@<your-appliance-ip>:22/~/ ./1413495704-appliance.sbx```
-
-4. Log into the Adminstration console on port 1080 and scroll down. If the service pack was successfully copied a 'Local update found' message will be displayed.
-5. Clicking 'Install now' will apply the service pack and restart the appliance. Restart can take up to 2 minutes.
-
-**Troubleshooting**
-
-1. If you have uploaded an invalid service pack you will receive an error alert on the adminstrative console and the upgrade process will be aborted. The appliance will remain in its previous state.
-
-2. If on restart, the appliance is in an inconsistent state, restore from your backup snapshot and contact [support](mailto:support@getsandbox.com) for assistance.
-
-4. User Management
+5. User Management
 ------------------
 Once the appliance is configured, you can connect to the Sandbox application. A single administrator user is created for you during the configuration process; you will need to log in with the administrator's email or the username that was generated.
 
@@ -196,12 +196,12 @@ Move your cursor over the user to be deleted. If you have the appropriate admini
 **Password reset:**
 To do password reset you must have an email service provider configured. A user can request to reset their password from the Sign-in page. An email with a reset password link will be sent to their email address.
 
-4. Getting started with Sandbox
+6. Getting started with Sandbox
 -------------------------------------------------
 
 Once you have added users to the Sandbox application they are able to start building and running sandboxes on the appliance. Please refer to the Sandbox application documentation available at http://*your_sandbox_hostname*/docs for guides, examples, and API references.
 
-5. Sandbox API
+7. Sandbox API
 --------------------------------------------------
 Sandbox exposes a RESTful API that can be used to programmatically perform user management, create and update sandboxes, and so on. The API is secured and you must provide a valid API session token to authenticate your API calls. The API expects request data encoded as JSON and returns all data as JSON.
 
@@ -337,7 +337,7 @@ The service returns the name of the cloned sandbox or an error if there was a pr
 ```
 
 
-6. Migrating Sandboxes Between Appliances
+8. Migrating Sandboxes Between Appliances
 -----------------------------------------------------
 By default, Sandbox Appliances are self contained and run in isolation. If you are running multiple appliances and you wish to migrate sandboxes from one to another then you can do this either manually or script the process. The steps are:
 
