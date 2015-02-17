@@ -44,7 +44,7 @@ The appliance uses email to send event notifications such as user invites, passw
 -------------------------
 The appliance can be upgraded with service packs. Service packs are made available periodically to address security fixes and provide feature updates.
 
-Latest service pack: [Service Pack v1.0.1](https://s3-us-west-2.amazonaws.com/getsandbox-assets/1414552548-appliance.sbx)
+Latest service pack: [Service Pack v1.1.2857](https://s3-us-west-2.amazonaws.com/getsandbox-assets/1.1.2857-appliance.sbx)
 
 **Applying service packs:**
 
