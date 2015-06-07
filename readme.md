@@ -1,4 +1,4 @@
-Sandbox Virtual Appliance 1.0 Install Guide
+Sandbox Virtual Appliance 1.1 Install Guide
 ===========================================
 This document describes how to install and configure the Sandbox Virtual Appliance in your environment.
 
