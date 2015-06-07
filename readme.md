@@ -10,7 +10,7 @@ The appliance is made available as an AWS AMI to allow for quick and easy deploy
 
 The private AMI for Sandbox is available in the following regions:
 
-* ap-southeast-2 (Asia/Sydney): ami-151a7a2f
+* ap-southeast-2 (Asia/Sydney)
 
 Note that as of this time the AMI is only available in the above regions; if you wish to run your EC2 instance in another zone, please contact us for assistance.
 
@@ -23,6 +23,7 @@ You must attach a security group to the instance with the following inbound rule
 | SSH       | TCP       | 22            |
 | HTTP      | TCP       | 80            |
 | Custom TCP Rule | TCP | 1080          |
+| Custom TCP Rule | TCP | 61616          |
 
 The appliance administration console is accessible on port 1080. The Sandbox application is accessible on port 80. SSH is required to apply update packages to the appliance.
 
