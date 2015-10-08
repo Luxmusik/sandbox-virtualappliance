@@ -1,33 +1,38 @@
-Sandbox Virtual Appliance 1.1 Install Guide
+Sandbox Virtual Appliance 2.0 Install Guide
 ===========================================
 This document describes how to install and configure the Sandbox Virtual Appliance in your environment.
 
 1. System Requirements
 ----------------------
 
-#### Amazon AWS
-The appliance is made available as an AWS AMI to allow for quick and easy deployments on an Amazon EC2 instance. This means rather than having a blank Linux image, the Sandbox application will already be installed and running once Amazon creates your EC2 instance. 
+#### Packaging
 
-The private AMI for Sandbox is available in the following regions:
+The 2.0 appliance is now made available as a zip file, instead of a full VM image like v1.x. So a suitable Linux VM is required to install the package on to, but this allows greater flexibility to meet enterprise requirements like monitoring, logging, backups and automated deployments.
 
-* ap-southeast-2 (Asia/Sydney)
+#### Linux
 
-Note that as of this time the AMI is only available in the above regions; if you wish to run your EC2 instance in another zone, please contact us for assistance.
+We recommend a Linux environment running kernel 3.15 or above, there is an issue in kernel 3.13 that causes failures in some environments. We run Ubuntu 15.04 LTS, but you can use whatever you like as long it meets the above requirements.
 
-We recommend selecting an m3.medium or larger instance. Generally speaking, the appliance benefits from a greater memory allocation than cpu.
+#### Capacity
 
-You must attach a security group to the instance with the following inbound rules:
+The virtual machine needs 4gb+ memory, the equivalent of an AWS m3.medium or larger.
+
+#### Java
+
+A very specific version of Java is required, Java 8 Update 25. Later versions have memory leaks, and earlier versions have performance problems. So this version is mandatory.
+
+#### Ports
+
+The Sandbox appliance is made up of a number of components, 4 of which are servers that you will interact with, each of these has a separate port:
 
 | Type      | Protocol  | Port Range    |
 |-----------|-----------|---------------|
-| SSH       | TCP       | 22            |
-| HTTP      | TCP       | 80            |
-| Custom TCP Rule | TCP | 1080          |
-| Custom TCP Rule | TCP | 61616          |
+| Web / Combined*      | TCP       | 8080            |
+| Proxy | TCP | 10000          |
+| Git | TCP | 9000          |
+| API | TCP | 8005          |
 
-The appliance administration console is accessible on port 1080. The Sandbox application is accessible on port 80. SSH is required to apply update packages to the appliance.
-
-Both port 22 and 1080 are used for adminstrative purposes only. For security reasons, these should not be publicly accessible. Restrict access using a firewall, or binding the ports to white-listed internal ips when creating the security group.
+The 'Combined' server is a component that routes your request to the correct component (API, Git, Proxy or Webserver) based on the URL and hostname of the request URL. This means you should really only ever have to communicate with the Combined port, but the other ports will be open and thus need to be available. These ports are the defaults and can be changed in the Sandbox config file.
 
 #### DNS Provider
 The appliance requires a host name provided by a a DNS service. This is necesary to properly route traffic to sandboxes and system components on the appliance.
@@ -36,155 +41,33 @@ If you configure an "A" record to map the host name to an IP address you must sp
 
 If you configure a "C" record to map the host name to another (canonical) domain name again you must specify a *wildcard domain* such as ```*.sandbox-va.com```
 
-You will need to provide the allocated host name to the appliance during the configuration process.
+The DNS hostname settings should be configured in the appliance config file, by default under the conf/ directory.
 
 #### SMTP
-The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled.
+The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled. The SMTP settings should be configured in the appliance config file, by default under the conf/ directory.
+
+#### Setup
+
+You will be prompted when you first execute the appliance binary to setup an Administrator account, team and enter your license. This is completed on the command line and most of the values can be updated later via the Web UI if you get something wrong. Once this step is completed you won't be prompted for the details again.
 
 2. Upgrading the Appliance
 -------------------------
-The appliance can be upgraded with service packs. Service packs are made available periodically to address security fixes and provide feature updates.
 
-Latest service pack: [Service Pack v1.1.2877](https://s3-us-west-2.amazonaws.com/getsandbox-assets/1.1.2877-appliance.sbx)
+New appliance versions will be shipped as new packaged zip files, just like the original installation. An upgrade can be completed by stopping the running appliance and overwriting the installation directory with the new files.
 
-**Applying service packs:**
+By default the persistent data like Git repositories and the application database are stored in the data/ directory inside the installation directory, for ease of upgrading later it is recommended to move this data directory to outside of the installation directory. This can be configured in the appliance config file, by default under the conf/ directory.
 
-To apply a service pack:
-
-1. Take a snapshot of your appliance as a backup.
-2. Download the service pack to your local filesyastem
-3. Copy the service pack to the appliance via scp. It must be copied to the sandboxadmin users home directory. For example:```
-scp sandboxadmin:sandbox@<your-appliance-ip>:~/ <file>.sbx```
-
-4. Log into the Adminstration console on port 1080 and scroll down. If the service pack was successfully copied a 'Local update found' message will be displayed.
-5. Clicking 'Install now' will apply the service pack and restart the appliance. Restart can take up to 2 minutes.
-
-**Troubleshooting**
-
-1. If you have uploaded an invalid service pack you will receive an error alert on the adminstrative console and the upgrade process will be aborted. The appliance will remain in its previous state.
-
-2. If on restart, the appliance is in an inconsistent state, restore from your backup snapshot and contact [support](mailto:support@getsandbox.com) for assistance.
-
-
-3. Configuring the Appliance
-----------------------------
-The appliance needs to be configured before you can commence using it. You can configure the appliance using the administration console or programmatically via the API.
-
-#### Appliance configuration using administration console
-
-Connect to the administration console on port 1080 to run the configuration wizard. The configuration wizard is displayed when the appliance is in its initial unconfigured state; once the configuration wizard is completed you will be redirected to the Sandbox web application.
-
-The configuration wizard will guide you through the setup process. You will need to configure:
-
-1. **Organisation name**: This is used for managing user access permissions. All users will be added to your organisation when they are invited to use the Sandbox.
-2. **An administrator user**: This user has full administrative access over the VA. You can create further administrator users after the initial configuration is complete.
-3. **DNS Hostname**: Enter the DNS hostname that you have reserved to point at the EC2 instance running the VA.
-4. **Enabling emails (optional)**: Providing connection details for an email service provider is recommended so that users can receive notifications when their account is created, added to teams, projects etc and forgotten password functionality is enabled. If you do not have an internal email service provider you can setup an account on a 3rd party provider, such as Gmail, and use them as your email service provider.
-5. **Enter License Key (optional)**: If you have purchased a license key you can enter it now. If you don't, the appliance operates in a free tier mode which still provides full functionality however the number of service mocks you can deploy is limited. License keys can be added later.
-
-That's it. Save the configuration and the appliance will restart itself with the updated configuration and you will be redirected to the Sandbox web application. You are now ready to start adding users and creating mock services.
-
-#### Appliance configuration using API
-
-The appliance exposes an administrative RESTful API on port 1080 that can be used to programmatically configure the appliance. When the appliance is in its initial unconfigured state the API is unsecured (as the administrator user does not yet exist). Configure the appliance using the /config service:
-
-```
-Endpoint: /api/1/config
-Method: PUT
-Content-Type: application/json
-Request Body:
-{ 
-    "organisationName": *Required*. The name of your organisation. All users are added to the organisation when created.
-    "adminFirstName": *Required*. Administrator's first name. Note that the username will be generated from the provided first and last name.
-    "adminLastName": *Required*. Administrator's last name. Note that the username will be generated from the provided first and last name.
-    "adminPassword": *Required*. Administrator's password.
-    "adminEmail": *Required*. Administrator's email address.
-    "hostname": *Required*. The DNS hostname assigned to the appliance server. For example, getsandbox.com. Do not include http:// in the hostname.
-    "emailScheme": *Required*. Value must be one of: none, smtp, smtps, SMTP, SMTPS.  All subsequent email fields must be provided to enable email. Use 'none' to turn email off.
-    "emailHost": (Optional). The email service provider hostname. For example, gmail.com.
-    "emailUsername": (Optional). The username to authenticate with the email service provider.
-    "emailPassword": (Optional). The password to authenticate with the email service provider.
-    "emailFrom": (Optional). The email address set in the 'from' field for emails.
-    "license": (Optional). If you have purchased a license then provide the key here.
-}
-```
-
-The /config service returns an empty response with status 200 if the configuration was successful or an error if it was not. The appliance will immediately restart itself on receipt of a valid configuration, please allow upto 120 seconds for all components to restart after the /config service has responded.
-
-4. Updating the Appliance Configuration
----------------------------------------
-
-The appliance configuration can be updated using the administration console or programmatically via the API.
-
-#### Update appliance configuration using administration console
-
-The appliance configuration can be updated by logging into the appliance administration console on port 1080. All settings except the default administrator user and the organisation can be updated. Saving the configuration will once again restart the appliance with the updated configuration and you will be redirected to the Sandbox application page.
-
-#### Update appliance configuration using API
-
-Once configured, the administrative RESTful API on port 1080 is secured and you must acquire a session token to perform administrative actions. The session token must be provided as a Cookie header on subsequent requests to the API.
-
-Get a session token using the /sessions service:
-
-```
-Endpoint: /api/1/sessions
-Method: POST
-Content-Type: application/json
-Request Body:
-{ 
-    "usernameOrEmail": *Required*. Administrator account username or email address,
-    "password": *Required*. Administrator account password
-}
-```
-
-A curl example to get a session token:
-
-```
-curl -X POST -H "Content-Type: application/json" 
--d '{"usernameOrEmail":"michaelbluth", "password":"adminPassword"}' http://bluth-sandbox.com:1080/api/1/sessions
-```
-
-The service returns a sessionId if the user credentials are correct or an error if they are not:
-
-```
-{ 
-    "sessionId": "s-db31478d-a6f8-4717-bc5a-2e587d8a7734",
-    "user": {...}
-}
-```
-
-A request can now be sent to the /config service with the session token to update your appliance config. The following settings can be updated:
-
-```
-Endpoint: /api/1/config
-Method: PUT
-Cookie: sessionId=<your_session_token>
-Content-Type: application/json
-Request Body:
-{ 
-    "hostname": (Optional). The DNS hostname assigned to the appliance server. For example, getsandbox.com. Do not include http:// in the hostname.
-    "emailScheme": (Optional). Value must be one of: none, smtp, smtps, SMTP, SMTPS.  All subsequent email fields must be provided to enable email. Use 'none' to turn email off.
-    "emailHost": (Optional). The email service provider hostname. For example, gmail.com.
-    "emailUsername": (Optional). The username to authenticate with the email service provider.
-    "emailPassword": (Optional). The password to authenticate with the email service provider.
-    "emailFrom": (Optional). The email address set in the 'from' field for emails.
-    "license": (Optional). If you have purchased a license then provide the key here.
-}
-```
-
-The /config service returns an empty response with status 200 if the configuration was successful or an error if it was not. The appliance will immediately restart itself on receipt of a valid configuration, please allow upto 120 seconds for all components to restart after the /config service has responded.
-
-5. User Management
+3. User Management
 ------------------
 Once the appliance is configured, you can connect to the Sandbox application. A single administrator user is created for you during the configuration process; you will need to log in with the administrator's email or the username that was generated.
 
 **Add new users:**
 
-1. From the Dashboard, click your username in the top right-hand navbar to reveal a drop-down menu and click 'Organisations'
-2. Select {YourOrganisationName} -> Members from the left hand navbar
-3. New users are added by inviting them to join your organisation. Provide a valid email address for the user and click 'Add User'.
-4. An invite email will be sent to the new user with an activation link. The user is given a default password of 'password'. *Note*: If an email service provider wasn't configured no email is sent.
-5. The newly added user will be listed as a member of the organisation
+1. From the Dashboard, click your username in the top right-hand navbar to reveal a drop-down menu and click 'Plans & Usage'
+2. Select {YourOrganisationName} from the left hand navbar
+3. New users are added by inviting them to join your team. Provide a valid email address for the user and click 'Add User'.
+4. An invite email will be sent to the new user with an activation link. The user is given a default password of 'password'. *Note*: If an email service provider wasn't configured no email is sent and the user should login using their email and the default password.
+5. The newly added user will be listed as a member of the team
 
 **Adding additional administrator users:**
 
