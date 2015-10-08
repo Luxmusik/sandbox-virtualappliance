@@ -7,7 +7,7 @@ This document describes how to install and configure the Sandbox Virtual Applian
 
 #### Packaging
 
-The 2.0 appliance is now made available as a zip file, instead of a full VM image like v1.x. So a suitable Linux VM is required to install the package on to, but this allows greater flexibility to meet enterprise requirements like monitoring, logging, backups and automated deployments.
+The 2.0 appliance is now made available as a zip file, instead of a full VM image like v1.x. So a suitable Linux VM is required to install the package on, while slightly less convenient this allows greater flexibility to meet enterprise requirements like monitoring, logging, backups and automated deployments.
 
 #### Linux
 
@@ -80,12 +80,12 @@ Move your cursor over the user to be deleted. If you have the appropriate admini
 **Password reset:**
 To do password reset you must have an email service provider configured. A user can request to reset their password from the Sign-in page. An email with a reset password link will be sent to their email address.
 
-6. Getting started with Sandbox
+4. Getting started with Sandbox
 -------------------------------------------------
 
 Once you have added users to the Sandbox application they are able to start building and running sandboxes on the appliance. Please refer to the Sandbox application documentation available at http://*your_sandbox_hostname*/docs for guides, examples, and API references.
 
-7. Sandbox API
+5. Sandbox API
 --------------------------------------------------
 Sandbox exposes a RESTful API that can be used to programmatically perform user management, create and update sandboxes, and so on. The API is secured and you must provide a valid API session token to authenticate your API calls. The API expects request data encoded as JSON and returns all data as JSON.
 
@@ -221,7 +221,7 @@ The service returns the name of the cloned sandbox or an error if there was a pr
 ```
 
 
-8. Migrating Sandboxes Between Appliances
+6. Migrating Sandboxes Between Appliances
 -----------------------------------------------------
 By default, Sandbox Appliances are self contained and run in isolation. If you are running multiple appliances and you wish to migrate sandboxes from one to another then you can do this either manually or script the process. The steps are:
 
