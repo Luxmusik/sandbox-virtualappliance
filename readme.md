@@ -1,29 +1,39 @@
-Sandbox Virtual Appliance 2.0 Install Guide
+Sandbox Server 2.0 Install Guide
 ===========================================
-This document describes how to install and configure the Sandbox Virtual Appliance in your environment.
+Sandbox Server is the on-premises solution for enterprise teams. It allows everyone in your organisation to easilly collaborate on your stubs and mock services. This document describes how to install and configure Sandbox Server in your environment.
 
 1. System Requirements
 ----------------------
+#### Hardware
 
-#### Packaging
+- If you are evaluating Sandbox, we recommend that you use a server with at least 2gb memory.
+- For production, we recommend 2+ processor cores and 4gb+ memory
+- For Amazon Web Services (AWS) the virtual machine needs 4gb+ memory, the equivalent of an AWS m3.medium or larger.
+- The hardware requirements for a full production deployment depend on the number and frequency of stub / mock service requests and the number of active sandboxes.
 
-The 2.0 appliance is now made available as a zip file, instead of a full VM image like v1.x. So a suitable Linux VM is required to install the package on, while slightly less convenient this allows greater flexibility to meet enterprise requirements like monitoring, logging, backups and automated deployments.
+#### Operating Systems
 
-#### Linux
+Although Sandbox can be urn on Windows, Linux and Mac systems, for enterprise use we only recommend, and support, Linus. This recommendation is based on our own testing and experience with using Sandbox.
 
-We recommend a Linux environment running kernel 3.15 or above, there is an issue in kernel 3.13 that causes failures in some environments. We run Ubuntu 15.04 LTS, but you can use whatever you like as long it meets the above requirements.
-
-#### Capacity
-
-The virtual machine needs 4gb+ memory, the equivalent of an AWS m3.medium or larger.
+- Sandbox is a pure Java application and should run on any platform (Apple Mac OS X, Linux, Microsoft Windows), provided all the Java requirements are satisfied.
+- We recommend using a Linux environment running kernel 3.15 or above.
+- In production environments Sandbox should be run from a dedicated user account.
 
 #### Java
 
-A very specific version of Java is required, Java 8 Update 25. Later versions have memory leaks, and earlier versions have performance problems. So this version is mandatory.
+- Sandbox requires a very specific version of Java 8; it is JRE 1.8.0u25. We recommend using Oracle JRE 8 which you can download from the Oracle website.
+- Sandbox only requires the Java JRE, not the JDK.
+- 
+#### Databases
+
+Sandbox supports H2 and PostgreSQL databases.
+
+- Sandbox bundles H2 by default and is only intended for evaluation use.
+- It is recommended that Sandbox is connected to an external PostgreSQL database.
 
 #### Ports
 
-The Sandbox appliance is made up of a number of components, 4 of which are servers that you will interact with, each of these has a separate port:
+By default, Sandbox uses the following ports:
 
 | Type      | Protocol  | Port Range    |
 |-----------|-----------|---------------|
@@ -32,7 +42,7 @@ The Sandbox appliance is made up of a number of components, 4 of which are serve
 | Git | TCP | 9000          |
 | API | TCP | 8005          |
 
-The 'Combined' server is a component that routes your request to the correct component (API, Git, Proxy or Webserver) based on the URL and hostname of the request URL. This means you should really only ever have to communicate with the Combined port, but the other ports will be open and thus need to be available. These ports are the defaults and can be changed in the Sandbox config file.
+The 'Combined' server is a component that routes your request to the correct component (API, Git, Proxy or Webserver) based on the URL and hostname of the request URL. This means you should really only ever have to communicate with the Combined port, but the other ports will be open and thus need to be available. These ports can be changed in the Sandbox config file.
 
 #### DNS Provider
 The appliance requires a host name provided by a a DNS service. This is necesary to properly route traffic to sandboxes and system components on the appliance.
