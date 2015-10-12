@@ -23,7 +23,7 @@ Although Sandbox can be urn on Windows, Linux and Mac systems, for enterprise us
 
 - Sandbox requires a very specific version of Java 8; it is JRE 1.8.0u25. We recommend using Oracle JRE 8 which you can download from the Oracle website.
 - Sandbox only requires the Java JRE, not the JDK.
-- 
+
 #### Databases
 
 Sandbox supports H2 and PostgreSQL databases.
