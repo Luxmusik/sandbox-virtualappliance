@@ -19,10 +19,19 @@ Although Sandbox can be run on Windows, Linux and Mac systems, for enterprise us
 - We recommend using a Linux environment running kernel 3.15 or above.
 - In production environments Sandbox should be run from a dedicated user account.
 
+
 #### Java
 
 - Sandbox requires a very specific version of Java 8; it is JRE 1.8.0u25. We recommend using Oracle JRE 8 which you can download from the Oracle website.
 - Sandbox only requires the Java JRE, not the JDK.
+
+To check your version of Java, in a terminal run this:
+
+```
+java -version
+```
+
+The version of Java should be "1.8.0_25". If you don't then please install the correct version.
 
 #### Databases
 
@@ -68,9 +77,11 @@ app.hostname=sandbox-server.com
 
 
 #### SMTP
-The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled. The SMTP settings should be configured in the appliance config file, by default under the conf/ directory.
+The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled. The SMTP settings should be configured in the server properties file (see Installation section for details).
 
-#### Setup
+2. Installation
+-------------------------
+
 
 You will be prompted when you first execute the appliance binary to setup an Administrator account, team and enter your license. This is completed on the command line and most of the values can be updated later via the Web UI if you get something wrong. Once this step is completed you won't be prompted for the details again.
 
