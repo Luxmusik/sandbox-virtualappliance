@@ -83,7 +83,7 @@ Extract the downloaded zip file to an install location. The path to the extracte
 
 The Sandbox home directory is where all of you Sandbox data is stored.
 
-The home directory defaults to ```<Sandbox installion directory>/data```. To change this, create a new Sandbox home directory (without spaces in the name), and then tell Sandbox where you created it by editing the ```<Sandbox installation directory>/conf/java_config.properties``` file - add the absolute path to your home directory to the ```persist.path``` attribute. Here's an example of what that could like when you're done:
+The home directory defaults to ```<Sandbox installation directory>/data```. To change this, create a new Sandbox home directory (without spaces in the name), and then tell Sandbox where you created it by editing the ```<Sandbox installation directory>/conf/java_config.properties``` file - add the absolute path to your home directory to the ```persist.path``` attribute. Here's an example of what that could like when you're done:
 
 ```
 # Sandbox home directory: all data is stored under this path.
