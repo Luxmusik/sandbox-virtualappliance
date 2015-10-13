@@ -82,6 +82,20 @@ The appliance uses email to send event notifications such as user invites, passw
 2. Installation
 -------------------------
 
+Extract teh downloaded zip file to an install location. The path to the extracted directory is referred to as the ```<Sandbox installation directory>``` in these instructions. Note taht you should use the same user account to both extract Sandbox and to run Sandbox to avoid possible permission issues at startup.
+
+#### Tell Sandbox where to store your data
+
+The Sandbox home directory is where all of you Sandbox data is stored.
+
+The home directory defaults to ```<Sandbox installion directory>/data```. To change this, create a new Sandbox home directory (without spaces in the name), and then tell Sandbox where you created it by editing the ```<Sandbox installation directory>/conf/java_config.properties``` file - add the absolute path to your home directory to the ```persist.path``` attribute. Here's an example of what that could like when you're done:
+
+```
+# Sandbox home directory: all data is stored under this path.
+# Set this variable to a valid path
+persist.path="/Users/bob/sandbox-home"
+ #
+```
 
 You will be prompted when you first execute the appliance binary to setup an Administrator account, team and enter your license. This is completed on the command line and most of the values can be updated later via the Web UI if you get something wrong. Once this step is completed you won't be prompted for the details again.
 
