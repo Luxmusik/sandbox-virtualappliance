@@ -31,7 +31,7 @@ Sandbox supports H2 and PostgreSQL databases.
 - Sandbox bundles H2 by default and is only intended for evaluation use.
 - It is recommended that Sandbox is connected to an external PostgreSQL database.
 - We support PostgreSQL 9.1+
-- 
+
 ### Web Browsers
 
 - Chrome: latest stable version supported
