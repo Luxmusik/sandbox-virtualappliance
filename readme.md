@@ -55,17 +55,17 @@ The 'Combined' server is a component that routes your request to the correct com
 #### DNS Provider
 Sandbox Server requires a host name provided by a a DNS service. This is necesary to properly route traffic to sandboxes and system components on the server.
 
-If you configure an "A" record to map the host name to an IP address you must specify a *wildcard domain* such as ```*.sandbox.com``` so that requests for subdomains such as ```git.sandbox.com```, ```bar.sandbox.com``` are routed to the host name.
+If you configure an "A" record to map the host name to an IP address you must specify a *wildcard domain* such as ```*.sandbox-server.com``` so that requests for subdomains such as ```git.sandbox-server.com```, ```bar.sandbox-server.com``` are routed to the host name.
 
-If you configure a "C" record to map the host name to another (canonical) domain name again you must specify a *wildcard domain* such as ```*.sandbox.com```
+If you configure a "C" record to map the host name to another (canonical) domain name again you must specify a *wildcard domain* such as ```*.sandbox-server.com```
 
-The DNS hostname must be configured in the server config file (by default under the conf/ directory). Set the following attributes:
+The DNS hostname must be configured in the server properties file (<sandbox_install_path>/conf/java_config.properties). Set the following attributes:
 
 ```
-# Set hostname to the domain. 
-app.hostname=sandbox.com
+# Set hostname to the root domain assigned to Sandbox. 
+app.hostname=sandbox-server.com
 ```
-In the example above we set the host name to sandbox.com.
+
 
 #### SMTP
 The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled. The SMTP settings should be configured in the appliance config file, by default under the conf/ directory.
