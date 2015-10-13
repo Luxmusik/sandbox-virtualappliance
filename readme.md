@@ -38,8 +38,9 @@ The version of Java should be "1.8.0_25". If you don't then please install the c
 Sandbox supports H2 and PostgreSQL databases.
 
 - Sandbox bundles H2 by default and is only intended for evaluation use.
-- It is recommended that Sandbox is connected to an external PostgreSQL database.
+- It is recommended that Sandbox is connected to an external PostgreSQL database. Connection details are in the ```java_config.properties```.
 - We support PostgreSQL 9.1+
+
 
 ### Web Browsers
 
@@ -104,6 +105,27 @@ Sandbox requires a hostname and this is configured in the server properties file
 app.hostname=sandbox-server.com
 #
 ```
+
+#### (Optional) Configure database connection properties
+
+Sandbox supports an H2 embedded database by default, but can be configured to use a more robust external Postgres database instead. If using Postgres, three separate schemas will are required. The configuration properties could look like:
+
+```
+jdbc.api.type=postgres
+jdbc.api.url=jdbc:postgresql://dbserver:5432/sandbox
+jdbc.api.user=username
+jdbc.api.password=password
+jdbc.trusted.type=postgres
+jdbc.trusted.url=jdbc:postgresql://dbserver:5432/trusted
+jdbc.trusted.user=username
+jdbc.trusted.password=password
+jdbc.untrusted.type=postgres
+jdbc.untrusted.url=jdbc:postgresql://dbserver:5432/untrusted
+jdbc.untrusted.user=username
+jdbc.untrusted.password=password
+```
+
+Once the connection properties are setup correctly, upon application start the schemas will automatically be populated and used. No other interaction is required.
 
 #### Start Sandbox!
 
