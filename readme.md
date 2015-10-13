@@ -13,7 +13,7 @@ Sandbox Server is the on-premises solution for enterprise teams. It allows every
 
 #### Operating Systems
 
-Although Sandbox can be urn on Windows, Linux and Mac systems, for enterprise use we only recommend, and support, Linus. This recommendation is based on our own testing and experience with using Sandbox.
+Although Sandbox can be run on Windows, Linux and Mac systems, for enterprise use we only recommend, and support, Linux. This recommendation is based on our own testing and experience with using Sandbox.
 
 - Sandbox is a pure Java application and should run on any platform (Apple Mac OS X, Linux, Microsoft Windows), provided all the Java requirements are satisfied.
 - We recommend using a Linux environment running kernel 3.15 or above.
@@ -30,6 +30,14 @@ Sandbox supports H2 and PostgreSQL databases.
 
 - Sandbox bundles H2 by default and is only intended for evaluation use.
 - It is recommended that Sandbox is connected to an external PostgreSQL database.
+- We support PostgreSQL 9.1+
+- 
+### Web Browsers
+
+- Chrome: latest stable version supported
+- Firefox: latest stable version supported
+- Internet Explorer: Support for version 11+. Previous versions not supported
+- Safari: latest stable version supported
 
 #### Ports
 
@@ -45,13 +53,19 @@ By default, Sandbox uses the following ports:
 The 'Combined' server is a component that routes your request to the correct component (API, Git, Proxy or Webserver) based on the URL and hostname of the request URL. This means you should really only ever have to communicate with the Combined port, but the other ports will be open and thus need to be available. These ports can be changed in the Sandbox config file.
 
 #### DNS Provider
-The appliance requires a host name provided by a a DNS service. This is necesary to properly route traffic to sandboxes and system components on the appliance.
+Sandbox Server requires a host name provided by a a DNS service. This is necesary to properly route traffic to sandboxes and system components on the server.
 
-If you configure an "A" record to map the host name to an IP address you must specify a *wildcard domain* such as ```*.sandbox-va.com``` so that requests for subdomains such as ```git.sandbox-va.com```, ```bar.sandbox-va.com``` are routed to the host name.
+If you configure an "A" record to map the host name to an IP address you must specify a *wildcard domain* such as ```*.sandbox.com``` so that requests for subdomains such as ```git.sandbox.com```, ```bar.sandbox.com``` are routed to the host name.
 
-If you configure a "C" record to map the host name to another (canonical) domain name again you must specify a *wildcard domain* such as ```*.sandbox-va.com```
+If you configure a "C" record to map the host name to another (canonical) domain name again you must specify a *wildcard domain* such as ```*.sandbox.com```
 
-The DNS hostname settings should be configured in the appliance config file, by default under the conf/ directory.
+The DNS hostname must be configured in the server config file (by default under the conf/ directory). Set the following attributes:
+
+```
+# Set hostname to the domain. 
+app.hostname=sandbox.com
+```
+In the example above we set the host name to sandbox.com.
 
 #### SMTP
 The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled. The SMTP settings should be configured in the appliance config file, by default under the conf/ directory.
