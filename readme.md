@@ -59,7 +59,7 @@ By default, Sandbox uses the following ports:
 | Git | TCP | 9000          |
 | API | TCP | 8005          |
 
-The 'Combined' server is a component that routes your request to the correct component (API, Git, Proxy or Webserver) based on the URL and hostname of the request URL. This means you should really only ever have to communicate with the Combined port, but the other ports will be open and thus need to be available. These ports can be changed in the Sandbox config file.
+The 'Combined' server is a component that routes your request to the correct component (API, Git, Proxy or Webserver) based on the URL and hostname of the request URL. This means you should really only ever have to communicate with the Combined port, but the other ports will be open and thus need to be available. These ports can be changed in the Sandbox properties file (see Installation section for details).
 
 #### DNS Provider
 Sandbox Server requires a host name provided by a a DNS service. This is necesary to properly route traffic to sandboxes and system components on the server.
@@ -68,13 +68,7 @@ If you configure an "A" record to map the host name to an IP address you must sp
 
 If you configure a "C" record to map the host name to another (canonical) domain name again you must specify a *wildcard domain* such as ```*.sandbox-server.com```
 
-The DNS hostname must be configured in the server properties file (<sandbox_install_path>/conf/java_config.properties). Set the following attributes:
-
-```
-# Set hostname to the root domain assigned to Sandbox. 
-app.hostname=sandbox-server.com
-```
-
+The DNS hostname must be configured in the server properties file (see Installation section for details).
 
 #### SMTP
 The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled. The SMTP settings should be configured in the server properties file (see Installation section for details).
