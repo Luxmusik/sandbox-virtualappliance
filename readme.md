@@ -94,21 +94,55 @@ The home directory defaults to ```<Sandbox installion directory>/data```. To cha
 # Sandbox home directory: all data is stored under this path.
 # Set this variable to a valid path
 persist.path="/Users/bob/sandbox-home"
- #
+#
 ```
 
-You will be prompted when you first execute the appliance binary to setup an Administrator account, team and enter your license. This is completed on the command line and most of the values can be updated later via the Web UI if you get something wrong. Once this step is completed you won't be prompted for the details again.
+#### Set the root domain to access Sandbox
 
-2. Upgrading the Appliance
--------------------------
+Sandbox requires a hostname and this is configured in the server properties file. Edit ```<Sandbox installation directory>/conf/java_config.properties``` file - add the host name to the ```app.hostname``` attribute. Here's an example of what that could like when you're done: 
 
-New appliance versions will be shipped as new packaged zip files, just like the original installation. An upgrade can be completed by stopping the running appliance and overwriting the installation directory with the new files.
 
-By default the persistent data like Git repositories and the application database are stored in the data/ directory inside the installation directory, for ease of upgrading later it is recommended to move this data directory to outside of the installation directory. This can be configured in the appliance config file, by default under the conf/ directory.
+```
+# Host name: set this to the root hostname designated for Sandbox. This is required to route
+# requests to sandboxes as each one exists as a subdomain. For example, a sandbox called 'test'
+# and a hostname of sandbox-server.com would be accessible at test.sandbox-server.com.
+#
+app.hostname=sandbox-server.com
+#
+```
+
+#### Start Sandbox!
+
+In a terminal, change directory to ```<Sandbox installation directory>``` and run this:
+
+```
+./bin/sandbox-appliance
+```
+
+You will be prompted on the command line to enter your name, choose a password, create a team name and optionally provide a license. Your administrator account is created from your name, it will be displayed on the terminal. Here's an example of what this looks like:
+
+```
+Enter administrator first name: ando
+Enter administrator last name: stewart
+Enter administrator email: a@c.com
+Enter administrator password (input is masked): 
+Enter team name (alphanumeric only, no spaces): ando
+License key (will have been emailed to you, optional): 
+2015-10-13 12:38:36:975 WARN  andbox.runner.Runner -                                      - Create administrator with username: 'andostewart'
+2015-10-13 12:38:37:062 WARN  andbox.runner.Runner -                                      - Initial setup completed successfully.
+2015-10-13 12:38:37:062 WARN  andbox.runner.Runner -                                      - API service started.
+2015-10-13 12:38:37:815 WARN  andbox.runner.Runner -                                      - Git service started.
+2015-10-13 12:38:37:838 WARN  andbox.runner.Runner -                                      - Drone service started.
+2015-10-13 12:38:38:639 WARN  andbox.runner.Runner -                                      - Proxy service started.
+2015-10-13 12:38:38:718 WARN  m.sandbox.web.Router -                                      - Starting router for host 'lvh.me' on port 8080 with subdomains 'git.lvh.me' and 'www.lvh.me'
+2015-10-13 12:38:38:723 WARN  andbox.runner.Runner -                                      - Web server started.
+2015-10-13 12:38:38:725 WARN  andbox.runner.Runner -                                      - All components started.
+```
+
+Then, in your browser, go to http://<Sandbox hostname>:8080 and sign in with your new credentials. You're ready to go, starting adding users and creating sandboxes.
 
 3. User Management
 ------------------
-Once the appliance is configured, you can connect to the Sandbox application. A single administrator user is created for you during the configuration process; you will need to log in with the administrator's email or the username that was generated.
 
 **Add new users:**
 
@@ -133,6 +167,13 @@ To do password reset you must have an email service provider configured. A user 
 -------------------------------------------------
 
 Once you have added users to the Sandbox application they are able to start building and running sandboxes on the appliance. Please refer to the Sandbox application documentation available at http://*your_sandbox_hostname*/docs for guides, examples, and API references.
+
+5. Upgrading Sandbox
+-------------------------
+
+New Sandbox versions will be shipped as new packaged zip files, just like the original installation. An upgrade can be completed by stopping the running appliance and overwriting the installation directory with the new files.
+
+By default the persistent data like Git repositories and the application database are stored in the data/ directory inside the installation directory, for ease of upgrading later it is recommended to move this data directory to outside of the installation directory. This can be configured in the appliance config file, by default under the conf/ directory.
 
 5. Sandbox API
 --------------------------------------------------
@@ -267,71 +308,6 @@ The service returns the name of the cloned sandbox or an error if there was a pr
     "ownerOrganisation": {...},
     "repository": {...}
 }
-```
-
-
-6. Migrating Sandboxes Between Appliances
------------------------------------------------------
-By default, Sandbox Appliances are self contained and run in isolation. If you are running multiple appliances and you wish to migrate sandboxes from one to another then you can do this either manually or script the process. The steps are:
-
-1. Git clone the source sandbox to a filesystem
-2. Create a new target sandbox on the target appliance
-3. Add a new Git remote pointing to the target sandbox
-4. Push changes to the target
-
-A fully worked example: Two environments, Development and Test, each with their own appliance. Let's call them Development appliance and Test appliance. The 'banana-stand' sandbox is on the Development appliance and we wish to programmatically migrate the sandbox to the Test appliance. The Test appliacne doesn't yet have a sandbox to host the code so we need to create one.
-
-#### Git clone the source sandbox to a filesystem
-
-The appliance makes Git repositories available over HTTP on the ```git.*``` subdomain, for example if the appliance is configured with Domain Name ```bluth-dev-sandbox.com``` then Git is at ```git.bluth-dev-sandbox.com```. To clone our source 'banana-stand' sandbox:
-
-```
-git clone http://michaelbluth@git.bluth-dev-sandbox.com/banana-stand.git
-```
-
-#### Create the new target sandbox
-
-Create the target sandbox on the Test appliance with the same name via the API. We'll create it with a bare Git repository. You will need a valid API session to create the sandbox. Using our example from earlier, using Curl:
-
-```
-curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734" 
--d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://bluth-test-sandbox.com/api/1/sandboxes
-```
-
-This will create a new Git repository to host your code. The Git url will be ```git.bluth-test-sandbox.com/banana-stand.git```
-
-#### Add a new Git remote pointing to the target sandbox
-
-Having created the new target sandbox we need to add it as a git remote to the local copy of the source sandbox. For example, you can do this from a terminal with **git remote add**:
-
-```
-git remote add target-appliance http://michaelbluth@git.bluth-test-sandbox.com/banana-stand.git
-```
-
-#### Push changes to the target
-
-Finally, push the changes to the target repository:
-
-```
-git push target-appliance master
-```
-
-And we're done. Pushing to Git will update the running sandbox with the new codebase. A sample script incorporating the steps:
-
-```
-#!/bin/bash
-# clone the source sandbox code
-git clone http://michaelbluth@git.bluth-dev-sandbox.com/banana-stand.git
-
-# create target sandbox
-curl -X POST -H "Content-Type: application/json" -H "Cookie: sessionId=s-db31478d-a6f8-4717-bc5a-2e587d8a7734" 
--d '{"name":"banana-stand", "ownerOrganisationName":"Bluth", "commitBaseTemplate": false}' http://bluth-test-sandbox.com/api/1/sandbox
-
-# add new git remote
-git remote add target-appliance http://michaelbluth@git.bluth-test-sandbox.com/banana-stand.git
-
-# push changes to the target
-git push target-appliance master
 ```
 
 **Troubleshooting:**
