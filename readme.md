@@ -76,7 +76,7 @@ The appliance uses email to send event notifications such as user invites, passw
 2. Installation
 -------------------------
 
-Extract teh downloaded zip file to an install location. The path to the extracted directory is referred to as the ```<Sandbox installation directory>``` in these instructions. Note taht you should use the same user account to both extract Sandbox and to run Sandbox to avoid possible permission issues at startup.
+Extract teh downloaded zip file to an install location. The path to the extracted directory is referred to as the ```<Sandbox installation directory>``` in these instructions. Note that you should use the same user account to both extract Sandbox and to run Sandbox to avoid possible permission issues at startup.
 
 #### Tell Sandbox where to store your data
 
