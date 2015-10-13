@@ -76,7 +76,7 @@ The appliance uses email to send event notifications such as user invites, passw
 2. Installation
 -------------------------
 
-Extract teh downloaded zip file to an install location. The path to the extracted directory is referred to as the ```<Sandbox installation directory>``` in these instructions. Note that you should use the same user account to both extract Sandbox and to run Sandbox to avoid possible permission issues at startup.
+Extract the downloaded zip file to an install location. The path to the extracted directory is referred to as the ```<Sandbox installation directory>``` in these instructions. Note that you should use the same user account to both extract Sandbox and to run Sandbox to avoid possible permission issues at startup.
 
 #### Tell Sandbox where to store your data
 
@@ -122,18 +122,18 @@ Enter administrator email: a@c.com
 Enter administrator password (input is masked): 
 Enter team name (alphanumeric only, no spaces): ando
 License key (will have been emailed to you, optional): 
-2015-10-13 12:38:36:975 WARN  andbox.runner.Runner -                                      - Create administrator with username: 'andostewart'
-2015-10-13 12:38:37:062 WARN  andbox.runner.Runner -                                      - Initial setup completed successfully.
-2015-10-13 12:38:37:062 WARN  andbox.runner.Runner -                                      - API service started.
-2015-10-13 12:38:37:815 WARN  andbox.runner.Runner -                                      - Git service started.
-2015-10-13 12:38:37:838 WARN  andbox.runner.Runner -                                      - Drone service started.
-2015-10-13 12:38:38:639 WARN  andbox.runner.Runner -                                      - Proxy service started.
-2015-10-13 12:38:38:718 WARN  m.sandbox.web.Router -                                      - Starting router for host 'lvh.me' on port 8080 with subdomains 'git.lvh.me' and 'www.lvh.me'
-2015-10-13 12:38:38:723 WARN  andbox.runner.Runner -                                      - Web server started.
-2015-10-13 12:38:38:725 WARN  andbox.runner.Runner -                                      - All components started.
+2015-10-13 12:38:36:975 INFO  sandbox.runner.Runner -                                      - Create administrator with username: 'andostewart'
+2015-10-13 12:38:37:062 INFO  sandbox.runner.Runner -                                      - Initial setup completed successfully.
+2015-10-13 12:38:37:062 INFO  sandbox.runner.Runner -                                      - API service started.
+2015-10-13 12:38:37:815 INFO  sandbox.runner.Runner -                                      - Git service started.
+2015-10-13 12:38:37:838 INFO  sandbox.runner.Runner -                                      - Drone service started.
+2015-10-13 12:38:38:639 INFO  sandbox.runner.Runner -                                      - Proxy service started.
+2015-10-13 12:38:38:718 INFO  sandbox.web.Router    -                                      - Starting router for host 'lvh.me' on port 8080 with subdomains 'git.lvh.me' and 'www.lvh.me'
+2015-10-13 12:38:38:723 INFO  sandbox.runner.Runner -                                      - Web server started.
+2015-10-13 12:38:38:725 INFO  sandbox.runner.Runner -                                      - All components started.
 ```
 
-Then, in your browser, go to http://<Sandbox hostname>:8080 and sign in with your new credentials. You're ready to go, starting adding users and creating sandboxes.
+Then, in your browser, go to ```http://<Sandbox hostname>:8080``` and sign in with your new credentials. You're ready to go, starting adding users and creating sandboxes.
 
 3. User Management
 ------------------
