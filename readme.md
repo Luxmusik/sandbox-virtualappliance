@@ -132,7 +132,7 @@ Once the connection properties are setup correctly, upon application start the s
 In a terminal, change directory to ```<Sandbox installation directory>``` and run this:
 
 ```
-./bin/sandbox-appliance
+./bin/sandbox-server
 ```
 
 You will be prompted on the command line to enter your name, choose a password, create a team name and optionally provide a license. Your administrator account is created from your name, it will be displayed on the terminal. Here's an example of what this looks like:
