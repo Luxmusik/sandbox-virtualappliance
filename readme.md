@@ -115,14 +115,6 @@ jdbc.api.type=postgres
 jdbc.api.url=jdbc:postgresql://dbserver:5432/sandbox
 jdbc.api.user=username
 jdbc.api.password=password
-jdbc.trusted.type=postgres
-jdbc.trusted.url=jdbc:postgresql://dbserver:5432/trusted
-jdbc.trusted.user=username
-jdbc.trusted.password=password
-jdbc.untrusted.type=postgres
-jdbc.untrusted.url=jdbc:postgresql://dbserver:5432/untrusted
-jdbc.untrusted.user=username
-jdbc.untrusted.password=password
 ```
 
 Once the connection properties are setup correctly, upon application start the schemas will automatically be populated and used. No other interaction is required.
