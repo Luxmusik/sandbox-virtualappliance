@@ -38,7 +38,7 @@ The version of Java should be "1.8.0_25". If you don't then please install the c
 Sandbox supports H2 and PostgreSQL databases.
 
 - Sandbox bundles H2 by default and is only intended for evaluation use.
-- It is recommended that Sandbox is connected to an external PostgreSQL database. Connection details are in the ```java_config.properties```.
+- It is recommended that Sandbox is connected to an external PostgreSQL database. Connection details are in the ```server.properties```.
 - We support PostgreSQL 9.1+
 
 
@@ -83,7 +83,7 @@ Extract the downloaded zip file to an install location. The path to the extracte
 
 The Sandbox home directory is where all of you Sandbox data is stored.
 
-The home directory defaults to ```<Sandbox installation directory>/data```. To change this, create a new Sandbox home directory (without spaces in the name), and then tell Sandbox where you created it by editing the ```<Sandbox installation directory>/conf/java_config.properties``` file - add the absolute path to your home directory to the ```persist.path``` attribute. Here's an example of what that could like when you're done:
+The home directory defaults to ```<Sandbox installation directory>/data```. To change this, create a new Sandbox home directory (without spaces in the name), and then tell Sandbox where you created it by editing the ```<Sandbox installation directory>/conf/server.properties``` file - add the absolute path to your home directory to the ```persist.path``` attribute. Here's an example of what that could like when you're done:
 
 ```
 # Sandbox home directory: all data is stored under this path.
@@ -94,7 +94,7 @@ persist.path="/Users/bob/sandbox-home"
 
 #### Set the root domain to access Sandbox
 
-Sandbox requires a hostname and this is configured in the server properties file. Edit ```<Sandbox installation directory>/conf/java_config.properties``` file - add the host name to the ```app.hostname``` attribute. Here's an example of what that could like when you're done: 
+Sandbox requires a hostname and this is configured in the server properties file. Edit ```<Sandbox installation directory>/conf/server.properties``` file - add the host name to the ```app.hostname``` attribute. Here's an example of what that could like when you're done: 
 
 
 ```
