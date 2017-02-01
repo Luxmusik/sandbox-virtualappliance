@@ -31,7 +31,7 @@ To check your version of Java, in a terminal run this:
 java -version
 ```
 
-The version of Java should be "1.8.0_25". If you don't then please install the correct version.
+The version of Java should be "1.8.0_112". If you don't then please install the correct version.
 
 #### Databases
 
