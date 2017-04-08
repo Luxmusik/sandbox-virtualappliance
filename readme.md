@@ -321,3 +321,7 @@ The service returns the name of the cloned sandbox or an error if there was a pr
 **Troubleshooting:**
 
 *All sandbox names are globally unique for each appliance. If you try to create a sandbox with a name that is already registered you will get an error.
+
+#### When attempting to start Sandbox server from the command line I get a "Exception in thread "main" java.lang.NullPointerException"?
+Please ensure you are in the root path of Sandbox server and are running the startup command as ./bin/sandbox-server. If you attempt are in the ./bin directory and attempt to run ./sandbox-server you will experience the above NullPointer exception
+
