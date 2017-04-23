@@ -22,7 +22,7 @@ Although Sandbox can be run on Windows, Linux and Mac systems, for enterprise us
 
 #### Java
 
-- Sandbox requires a very specific version of Java 8; it is JRE 1.8.0u25. We recommend using Oracle JRE 8 which you can download from the Oracle website.
+- Sandbox requires a very specific version of Java 8; it is JRE 1.8.0u112. We recommend using Oracle JRE 8 which you can download from the Oracle website.
 - Sandbox only requires the Java JRE, not the JDK.
 
 To check your version of Java, in a terminal run this:
@@ -56,9 +56,7 @@ By default, Sandbox uses the following ports:
 | Type      | Protocol  | Port Range    |
 |-----------|-----------|---------------|
 | Web / Combined*      | TCP       | 8080            |
-| Proxy | TCP | 10000          |
-| Git | TCP | 9000          |
-| API | TCP | 8005          |
+
 
 The 'Combined' server is a component that routes your request to the correct component (API, Git, Proxy or Webserver) based on the URL and hostname of the request URL. This means you should really only ever have to communicate with the Combined port, but the other ports will be open and thus need to be available. These ports can be changed in the Sandbox properties file (see Installation section for details).
 
@@ -111,10 +109,10 @@ app.hostname=sandbox-server.com
 Sandbox supports an H2 embedded database by default, but can be configured to use a more robust external Postgres database instead. If using Postgres, three separate schemas will are required. The configuration properties could look like:
 
 ```
-jdbc.api.type=postgres
-jdbc.api.url=jdbc:postgresql://dbserver:5432/sandbox
-jdbc.api.user=username
-jdbc.api.password=password
+db.api.type=postgres
+db.api.url=jdbc:postgresql://dbserver:5432/sandbox
+db.api.user=username
+db.api.password=password
 ```
 
 Once the connection properties are setup correctly, upon application start the schemas will automatically be populated and used. No other interaction is required.
