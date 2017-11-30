@@ -125,7 +125,16 @@ In a terminal, change directory to ```<Sandbox installation directory>``` and ru
 ./bin/sandbox-server
 ```
 
-You will be prompted on the command line to enter your name, choose a password, create a team name and optionally provide a license. Your administrator account is created from your name, it will be displayed on the terminal. Here's an example of what this looks like:
+You will be prompted on the command line to enter your name, choose a password, create a team name and optionally provide a licence key. Please note that licence keys will be provided in the following format:
+```
+-----BEGIN SANDBOX SERVER LICENCE KEY-----
+4uBcpsDmxY5wS6xvWXf1dKHPGKqTrFVL7Qg2wweiRvnIyhV7DpMM6dMywI1JrDVjUY+H8gEvIRFwePmgIxcdiVHu+AHYyeVZ16IO0jwMKBHd82VNIV0k9PxVcPthXuSxKyJhR6KekHxxaW+2JOqs7QAFc3IAJ2NvbS5zYW5kbW94LmFwaS5tb2RlbHMuU2FuZGJveExpY2Vuc2VWMV78nbc7rDgdAgAESQARbnVtYmVyT2ZJbnN0YW5jZXNJABRudW1iZXJPZlJlcG9zaXRvcmllc0kAEG51bWJlck9mUmVxdWVzdHNJA...etc..etc
+-----END SANDBOX SERVER LICENCE KEY-----
+```
+
+You must copy the entire contents contained BETWEEN the opening BEGIN and END blocks.
+
+Your administrator account is created from your name, it will be displayed on the terminal. Here's an example of what this looks like:
 
 ```
 Enter administrator first name: ando
@@ -318,7 +327,7 @@ The service returns the name of the cloned sandbox or an error if there was a pr
 
 **Troubleshooting:**
 
-*All sandbox names are globally unique for each appliance. If you try to create a sandbox with a name that is already registered you will get an error.
+*All sandbox names are globally unique for each Sandbox server instance. If you try to create a sandbox with a name that is already registered you will get an error.
 
 #### When attempting to start Sandbox server from the command line I get a "Exception in thread "main" java.lang.NullPointerException"?
 Please ensure you are in the root path of Sandbox server and are running the startup command as ./bin/sandbox-server. If you attempt are in the ./bin directory and attempt to run ./sandbox-server you will experience the above NullPointer exception
