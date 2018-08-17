@@ -38,7 +38,7 @@ The version of Java should be "1.8.0_112". If you don't then please install the 
 Sandbox supports H2 and PostgreSQL databases.
 
 - Sandbox bundles H2 by default and is only intended for evaluation use.
-- It is recommended that Sandbox is connected to an external PostgreSQL database. Connection details are in the ```server.properties```.
+- It is recommended that Sandbox is connected to an external PostgreSQL database. You can specify connection details to a PostgreSQL database in the ```server.properties``` file found under the ```<sandbox_install_path/conf``` path.
 - We support PostgreSQL 9.1+
 
 
@@ -51,14 +51,14 @@ Sandbox supports H2 and PostgreSQL databases.
 
 #### Ports
 
-By default, Sandbox uses the following ports:
+By default, Sandbox uses the following network ports:
 
 | Type      | Protocol  | Port Range    |
 |-----------|-----------|---------------|
 | Web / Combined*      | TCP       | 8080            |
 
 
-The 'Combined' server is a component that routes your request to the correct component (API, Git, Proxy or Webserver) based on the URL and hostname of the request URL. This means you should really only ever have to communicate with the Combined port, but the other ports will be open and thus need to be available. These ports can be changed in the Sandbox properties file (see Installation section for details).
+The 'Combined' server is a component that routes your request to the correct component (API, Git, Proxy or Webserver) based on the URL and hostname of the request URL. This means you should really only ever have to communicate with the Combined port, but the other ports will be open and thus need to be available. These ports can be changed in the ```server.properties``` file found under the ```<sandbox_install_path/conf``` path (see Installation section for details).
 
 #### DNS Provider
 Sandbox Server requires a host name provided by a a DNS service. This is necesary to properly route traffic to sandboxes and system components on the server.
@@ -67,32 +67,34 @@ If you configure an "A" record to map the host name to an IP address you must sp
 
 If you configure a "C" record to map the host name to another (canonical) domain name again you must specify a *wildcard domain* such as ```*.sandbox-server.com```
 
-The DNS hostname must be configured in the server properties file (see Installation section for details).
+The DNS hostname must be configured in the ```server.properties``` file found under the ```<sandbox_install_path/conf``` path (see Installation section for details).
 
 #### SMTP
-The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled. The SMTP settings should be configured in the server properties file (see Installation section for details).
+The appliance uses email to send event notifications such as user invites, password resets, team changes etc and requires an SMTP server to do this. If no SMTP server is available, the appliance will continue to function however notifications will be disabled. The SMTP settings should be configured in the ```server.properties``` file found under the ```<your_base_install_path/conf``` path (see Installation section for details).
 
 2. Installation
 -------------------------
 
-Extract the downloaded zip file to an install location. The path to the extracted directory is referred to as the ```<Sandbox installation directory>``` in these instructions. Note that you should use the same user account to both extract Sandbox and to run Sandbox to avoid possible permission issues at startup.
+Extract the downloaded zip file to an install location. The path to the extracted directory is referred to as the ```<sandbox_install_path>``` in these instructions. Note that you should use the same user account to both extract Sandbox and to run Sandbox to avoid possible permission issues at startup.
 
 #### Tell Sandbox where to store your data
 
-The Sandbox home directory is where all of you Sandbox data is stored.
+The Sandbox home directory is where all of your Sandbox data is stored.
 
-The home directory defaults to ```<Sandbox installation directory>/data```. To change this, create a new Sandbox home directory (without spaces in the name), and then tell Sandbox where you created it by editing the ```<Sandbox installation directory>/conf/server.properties``` file - add the absolute path to your home directory to the ```persist.path``` attribute. Here's an example of what that could like when you're done:
+The home directory defaults to ```<sandbox_install_path>/data```. To change this, create a new Sandbox home directory (without spaces in the name), and then tell Sandbox where you created it by editing the ```<sandbox_install_path>/conf/server.properties``` file - add the absolute path to your home directory to the ```persist.path``` attribute. Here's an example of what that could like when you're done:
 
 ```
 # Sandbox home directory: all data is stored under this path.
 # Set this variable to a valid path
-persist.path="/Users/bob/sandbox-home"
+persist.path="/var/lib/sandbox"
 #
 ```
 
+Ensure the that user account executing the sandbox server binary has read/write permissions to the path you have specified for storing data.
+
 #### Set the root domain to access Sandbox
 
-Sandbox requires a hostname and this is configured in the server properties file. Edit ```<Sandbox installation directory>/conf/server.properties``` file - add the host name to the ```app.hostname``` attribute. Here's an example of what that could like when you're done: 
+Sandbox requires a hostname and this is configured in the server properties file. Edit ```<sandbox_install_path>/conf/server.properties``` file - add the host name to the ```app.hostname``` attribute. Here's an example of what that could like when you're done: 
 
 
 ```
@@ -119,11 +121,13 @@ Once the connection properties are setup correctly, upon application start the s
 
 #### Start Sandbox!
 
-In a terminal, change directory to ```<Sandbox installation directory>``` and run this:
+In a terminal, change directory to ```<sandbox_install_path>``` and run this:
 
 ```
 ./bin/sandbox-server
 ```
+
+*Note* you must run this command from the base install path and not from inside ```./bin```.
 
 You will be prompted on the command line to enter your name, choose a password, create a team name and optionally provide a licence key. Please note that licence keys will be provided in the following format:
 ```
@@ -132,7 +136,12 @@ You will be prompted on the command line to enter your name, choose a password, 
 -----END SANDBOX SERVER LICENCE KEY-----
 ```
 
-You must copy the entire contents contained BETWEEN the opening BEGIN and END blocks.
+You must copy the entire contents contained BETWEEN the opening BEGIN and END blocks. ie
+```
+-----BEGIN SANDBOX SERVER LICENCE KEY-----
+<copy everything in here>
+-----END SANDBOX SERVER LICENCE KEY-----
+```
 
 Your administrator account is created from your name, it will be displayed on the terminal. Here's an example of what this looks like:
 
@@ -141,7 +150,7 @@ Enter administrator first name: ando
 Enter administrator last name: stewart
 Enter administrator email: a@c.com
 Enter administrator password (input is masked): 
-Enter team name (alphanumeric only, no spaces): ando
+Enter team name (alphanumeric only, no spaces): Acme
 License key (will have been emailed to you, optional): 
 2015-10-13 12:38:36:975 INFO  sandbox.runner.Runner -                                      - Create administrator with username: 'andostewart'
 2015-10-13 12:38:37:062 INFO  sandbox.runner.Runner -                                      - Initial setup completed successfully.
@@ -154,7 +163,7 @@ License key (will have been emailed to you, optional):
 2015-10-13 12:38:38:725 INFO  sandbox.runner.Runner -                                      - All components started.
 ```
 
-Then, in your browser, go to ```http://<Sandbox hostname>:8080``` and sign in with your new credentials. You're ready to go, starting adding users and creating sandboxes.
+Then, in your browser, go to ```http://<Sandbox hostname>:8080``` and sign in with your new credentials. You're ready to go, starting inviting additional users to join and creating sandboxes.
 
 3. User Management
 ------------------
@@ -188,7 +197,7 @@ Once you have added users to the Sandbox application they are able to start buil
 
 New Sandbox versions will be shipped as new packaged zip files, just like the original installation. An upgrade can be completed by stopping the running appliance and overwriting the installation directory with the new files.
 
-By default the persistent data like Git repositories and the application database are stored in the data/ directory inside the installation directory, for ease of upgrading later it is recommended to move this data directory to outside of the installation directory. This can be configured in the appliance config file, by default under the conf/ directory.
+By default the persistent data like Git repositories and the application database are stored in the ```./data/``` directory inside the installation directory. When upgrading, it is recommended to move this data directory to outside of the installation directory if you haven't already. This can be configured in the ```server.properties``` file found under the ```<your_base_install_path/conf``` path
 
 5. Sandbox API
 --------------------------------------------------
