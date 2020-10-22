@@ -334,6 +334,20 @@ The service returns the name of the cloned sandbox or an error if there was a pr
 }
 ```
 
+#### Upgrading
+
+The Sandbox Server installation package contains four directories:
+```
+bin/
+lib/
+data/
+conf/
+```
+
+`lib` and `bin` contain the scripts/code so are the main area of change when upgrading, `data` and `conf` are where user data may be stored. `data` stores the git repository data (where the Sandbox definitions are stored) and optional local database data (if not using Postgres). `conf` contains the server config, it is likely these have been customised to your installation.
+
+The simplest way to upgrade is to stop the Sandbox Server instance, and replace the `bin` and `lib` directories with those from the installation. Unpacking the install bundle over the top of the existing installation risks overwriting the customised config and corrupting the `lib` installation directory, so should be avoided.
+
 **Troubleshooting:**
 
 *All sandbox names are globally unique for each Sandbox server instance. If you try to create a sandbox with a name that is already registered you will get an error.
